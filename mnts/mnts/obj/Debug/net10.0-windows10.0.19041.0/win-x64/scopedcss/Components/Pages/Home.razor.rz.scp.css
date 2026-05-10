@@ -1,0 +1,91 @@
+html[b-v1xorn2wob],
+body[b-v1xorn2wob],
+#app[b-v1xorn2wob] {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.contenedor-main[b-v1xorn2wob] {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    font-family: Gadugi;
+    background-color: white;
+}
+
+/* LADO IZQUIERDO */
+
+.menu-imagenDeco[b-v1xorn2wob] {
+    width: 50%;
+    height: 100%;
+}
+
+.menu-imagenDeco img[b-v1xorn2wob] {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* LADO DERECHO */
+
+.menu-inicio[b-v1xorn2wob] {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+/* LOGO */
+
+.logoPrinc[b-v1xorn2wob] {
+    width: 450px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.textoLogo[b-v1xorn2wob] {
+    text-align: center;
+    font-size: 28px;
+    margin-top: 8px;
+    margin-bottom: 30px;
+    color: #3c40ea;
+}
+
+/* BOTONES */
+
+.contenedor-botones[b-v1xorn2wob] {
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.botones[b-v1xorn2wob] {
+    border: none;
+    background-color: #3c40ea;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .botones:hover[b-v1xorn2wob] {
+        transform: scale(1.02);
+    }
+
+    .botones:last-child[b-v1xorn2wob] {
+        background-color: #f22c2c;
+    }

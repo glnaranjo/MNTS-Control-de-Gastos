@@ -1,0 +1,61 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\galon\\.nuget\\packages\\microsoft.aspnetcore.components.webview\\10.0.0\\staticwebassets\\blazor.modules.json",
+      "PackagePath": "staticwebassets\\_framework\\blazor.modules.json"
+    },
+    {
+      "Id": "C:\\Users\\galon\\.nuget\\packages\\microsoft.aspnetcore.components.webview\\10.0.0\\staticwebassets\\blazor.webview.js",
+      "PackagePath": "staticwebassets\\_framework\\blazor.webview.js"
+    },
+    {
+      "Id": "C:\\Users\\galon\\Documents\\GitHub\\MNTS-Control-de-Gastos\\mnts\\mnts\\obj\\Debug\\net10.0-android\\scopedcss\\bundle\\mnts.styles.css",
+      "PackagePath": "staticwebassets\\mnts.styles.css"
+    },
+    {
+      "Id": "C:\\Users\\galon\\Documents\\GitHub\\MNTS-Control-de-Gastos\\mnts\\mnts\\wwwroot\\app.css",
+      "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\galon\\Documents\\GitHub\\MNTS-Control-de-Gastos\\mnts\\mnts\\wwwroot\\images\\fondo.png",
+      "PackagePath": "staticwebassets\\images\\fondo.png"
+    },
+    {
+      "Id": "C:\\Users\\galon\\Documents\\GitHub\\MNTS-Control-de-Gastos\\mnts\\mnts\\wwwroot\\images\\logo.png",
+      "PackagePath": "staticwebassets\\images\\logo.png"
+    },
+    {
+      "Id": "C:\\Users\\galon\\Documents\\GitHub\\MNTS-Control-de-Gastos\\mnts\\mnts\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "C:\\Users\\galon\\Documents\\GitHub\\MNTS-Control-de-Gastos\\mnts\\mnts\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\galon\\Documents\\GitHub\\MNTS-Control-de-Gastos\\mnts\\mnts\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "obj\\Debug\\net10.0-android\\staticwebassets\\msbuild.build.mnts.props",
+      "PackagePath": "build\\mnts.props"
+    },
+    {
+      "Id": "obj\\Debug\\net10.0-android\\staticwebassets\\msbuild.buildMultiTargeting.mnts.props",
+      "PackagePath": "buildMultiTargeting\\mnts.props"
+    },
+    {
+      "Id": "obj\\Debug\\net10.0-android\\staticwebassets\\msbuild.buildTransitive.mnts.props",
+      "PackagePath": "buildTransitive\\mnts.props"
+    },
+    {
+      "Id": "obj\\Debug\\net10.0-android\\staticwebassets\\msbuild.mnts.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net10.0-android\\staticwebassets\\msbuild.mnts.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

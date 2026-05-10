@@ -1,0 +1,8 @@
+wwwroot\app.css
+wwwroot\images\logo.png
+wwwroot\index.html
+wwwroot\lib\bootstrap\dist\css\bootstrap.min.css
+wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map
+wwwroot\images\fondo.png
+C:\Users\galon\.nuget\packages\microsoft.aspnetcore.components.webview\10.0.0\build\..\staticwebassets\blazor.webview.js
+C:\Users\galon\.nuget\packages\microsoft.aspnetcore.components.webview\10.0.0\build\..\staticwebassets\blazor.modules.json
