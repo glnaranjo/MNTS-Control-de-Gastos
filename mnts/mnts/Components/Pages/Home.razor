@@ -18,23 +18,23 @@
 
         <div class="contenedor-botones">
 
-            <button class="botones">
+            <NavLink href="/Gastos" class="botones">
                 Ingresar gastos
-            </button>
+            </NavLink>
 
-            <button class="botones">
+            <NavLink href="/Resumen" class="botones">
                 Ver resumen mensual
-            </button>
+            </NavLink>
 
-            <button class="botones">
+            <NavLink href="/Ingresos" class="botones">
                 Añadir ingresos
-            </button>
+            </NavLink>
 
-            <button class="botones">
+            <NavLink href="/Opciones" class="botones">
                 Opciones
-            </button>
+            </NavLink>
 
-            <button class="botones" style="background-color: #f22c2c">
+            <button class="botones" @onclick="CerrarApp" style="background-color: #f22c2c">
                 Salir
             </button>
 
@@ -42,3 +42,14 @@
 
     </div>
 </div>
+
+
+
+@code {
+
+    void CerrarApp()
+    {
+        Application.Current?.Quit();
+    }
+
+}

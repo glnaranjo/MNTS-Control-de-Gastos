@@ -52,12 +52,12 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>oaai2jwp1b</Fingerprint>
-      <Integrity>oLL9iXLkJyQHQpcmjGfHbMq6HdX4fSEN0tmUJhR95CI=</Integrity>
+      <Fingerprint>5831szw77v</Fingerprint>
+      <Integrity>a3G0KtktL7bysALcdtokZ3dMNLIu5SVlQFu1eRBS0p8=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <FileLength>160953</FileLength>
-      <LastWriteTime>Sun, 10 May 2026 16:29:48 GMT</LastWriteTime>
+      <FileLength>120933</FileLength>
+      <LastWriteTime>Sun, 10 May 2026 16:38:19 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\logo.png'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\index.html'))">
@@ -132,12 +132,12 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName>ScopedCss</AssetTraitName>
       <AssetTraitValue>ApplicationBundle</AssetTraitValue>
-      <Fingerprint>nllsxt6zcb</Fingerprint>
-      <Integrity>pS5UYNYen12lUSdjP3EEdC2yFg62OymLnLaPKdKKDKM=</Integrity>
+      <Fingerprint>esao27b7cy</Fingerprint>
+      <Integrity>nnp8zmWVGWsDR7yH6wPzOtazYkzX8lwh786Mipd75Q4=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <FileLength>7111</FileLength>
-      <LastWriteTime>Sun, 10 May 2026 16:28:45 GMT</LastWriteTime>
+      <FileLength>7265</FileLength>
+      <LastWriteTime>Sun, 10 May 2026 17:26:26 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\mnts.styles.css'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\_framework\blazor.modules.json'))">

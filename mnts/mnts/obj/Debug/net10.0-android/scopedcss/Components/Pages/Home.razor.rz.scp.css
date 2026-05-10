@@ -55,9 +55,9 @@ body[b-v1xorn2wob],
 .textoLogo[b-v1xorn2wob] {
     text-align: center;
     font-size: 28px;
-    margin-top: 15px;
-    margin-bottom: 40px;
-    color: #444;
+    margin-top: 8px;
+    margin-bottom: 30px;
+    color: #3c40ea;
 }
 
 /* BOTONES */
@@ -70,7 +70,14 @@ body[b-v1xorn2wob],
     gap: 15px;
 }
 
-.botones[b-v1xorn2wob] {
+/* BOTONES Y NAVLINKS */
+
+[b-v1xorn2wob] .botones {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    text-decoration: none;
     border: none;
     background-color: #3c40ea;
     color: white;
@@ -82,10 +89,10 @@ body[b-v1xorn2wob],
     transition: 0.2s;
 }
 
-    .botones:hover[b-v1xorn2wob] {
+    [b-v1xorn2wob] .botones:hover {
         transform: scale(1.02);
     }
 
-    .botones:last-child[b-v1xorn2wob] {
+    [b-v1xorn2wob] .botones:last-child {
         background-color: #f22c2c;
     }

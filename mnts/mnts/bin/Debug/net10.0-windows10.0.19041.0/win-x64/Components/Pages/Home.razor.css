@@ -55,9 +55,9 @@ body,
 .textoLogo {
     text-align: center;
     font-size: 28px;
-    margin-top: 15px;
-    margin-bottom: 40px;
-    color: #444;
+    margin-top: 8px;
+    margin-bottom: 30px;
+    color: #3c40ea;
 }
 
 /* BOTONES */
@@ -70,7 +70,14 @@ body,
     gap: 15px;
 }
 
-.botones {
+/* BOTONES Y NAVLINKS */
+
+::deep .botones {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    text-decoration: none;
     border: none;
     background-color: #3c40ea;
     color: white;
@@ -82,10 +89,10 @@ body,
     transition: 0.2s;
 }
 
-    .botones:hover {
+    ::deep .botones:hover {
         transform: scale(1.02);
     }
 
-    .botones:last-child {
+    ::deep .botones:last-child {
         background-color: #f22c2c;
     }

@@ -578,6 +578,6 @@ C:\Users\galon\Documents\GitHub\MNTS-Control-de-Gastos\mnts\mnts\bin\Debug\net10
 C:\Users\galon\Documents\GitHub\MNTS-Control-de-Gastos\mnts\mnts\bin\Debug\net10.0-windows10.0.19041.0\win-x64\wwwroot\images\logo.png
 C:\Users\galon\Documents\GitHub\MNTS-Control-de-Gastos\mnts\mnts\obj\Debug\net10.0-windows10.0.19041.0\win-x64\scopedcss\Components\Pages\Home.razor.rz.scp.css
 C:\Users\galon\Documents\GitHub\MNTS-Control-de-Gastos\mnts\mnts\bin\Debug\net10.0-windows10.0.19041.0\win-x64\Components\Pages\Home.razor.css
-C:\Users\galon\Documents\GitHub\MNTS-Control-de-Gastos\mnts\mnts\bin\Debug\net10.0-windows10.0.19041.0\win-x64\wwwroot\mnts.nllsxt6zcb.bundle.scp.css
 C:\Users\galon\Documents\GitHub\MNTS-Control-de-Gastos\mnts\mnts\bin\Debug\net10.0-windows10.0.19041.0\win-x64\images\fondo.png
 C:\Users\galon\Documents\GitHub\MNTS-Control-de-Gastos\mnts\mnts\bin\Debug\net10.0-windows10.0.19041.0\win-x64\wwwroot\images\fondo.png
+C:\Users\galon\Documents\GitHub\MNTS-Control-de-Gastos\mnts\mnts\bin\Debug\net10.0-windows10.0.19041.0\win-x64\wwwroot\mnts.esao27b7cy.bundle.scp.css

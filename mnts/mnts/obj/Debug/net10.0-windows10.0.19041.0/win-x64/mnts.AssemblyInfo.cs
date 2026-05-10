@@ -18,7 +18,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("mnts")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+6267db8dcf79f3410b346fa1712b1a89673af637")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+0cac90ca978781758ac471355f99278c4fc2cb79")]
 [assembly: System.Reflection.AssemblyProductAttribute("mnts")]
 [assembly: System.Reflection.AssemblyTitleAttribute("mnts")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

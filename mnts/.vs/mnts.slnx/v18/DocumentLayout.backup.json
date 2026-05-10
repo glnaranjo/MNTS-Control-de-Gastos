@@ -18,8 +18,16 @@
       "DocumentGroups": [
         {
           "DockedWidth": 1554,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -28,7 +36,7 @@
               "RelativeDocumentMoniker": "mnts\\Components\\Pages\\Home.razor",
               "ToolTip": "C:\\Users\\galon\\Documents\\GitHub\\MNTS-Control-de-Gastos\\mnts\\mnts\\Components\\Pages\\Home.razor",
               "RelativeToolTip": "mnts\\Components\\Pages\\Home.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-05-10T12:11:40.728Z",
               "EditorCaption": ""
@@ -41,7 +49,7 @@
               "RelativeDocumentMoniker": "mnts\\Components\\Pages\\Home.razor.css",
               "ToolTip": "C:\\Users\\galon\\Documents\\GitHub\\MNTS-Control-de-Gastos\\mnts\\mnts\\Components\\Pages\\Home.razor.css",
               "RelativeToolTip": "mnts\\Components\\Pages\\Home.razor.css",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADoAAAAAAAAAAADwv14AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
               "WhenOpened": "2026-05-10T12:58:19.09Z",
               "EditorCaption": ""
