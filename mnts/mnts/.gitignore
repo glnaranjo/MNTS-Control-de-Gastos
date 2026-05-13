@@ -1,0 +1,65 @@
+# Build
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# NuGet
+*.nupkg
+packages/
+.nuget/
+
+# MAUI
+*.keystore
+*.p12
+*.jks
+
+# Android
+*.apk
+*.aab
+
+# iOS / Mac
+*.ipa
+*.dSYM
+
+# Windows
+AppPackages/
+BundleArtifacts/
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Generated files
+GeneratedMSBuildEditorConfig.editorconfig
+
+# SQLite databases (opcional)
+*.db
+*.db-shm
+*.db-wal
+
+# Environment files
+.env
+.env.*
+
+# Publish folder
+publish/
+
+# Node modules (si usás frontend extra)
+node_modules/
