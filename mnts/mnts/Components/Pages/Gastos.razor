@@ -8,41 +8,68 @@
 
     <div class="ContenedorCentro">
 
-        <p class="subtitulo" style="margin-top: 8%;">Ingrese la fecha de los gastos</p>
-        <p><input type="date" /></p>
-
-        <br />
-
-        <p class="subtitulo">Ingrese sus gastos</p>
-
-        <div class="Etiquetas">
-
-            <p class="Etiqueta">Comida <br /><input type="text" placeholder="$" /></p>
-            <p class ="Etiqueta">Vivienda <br /><input type="text" placeholder="$" /></p>
-            <p class ="Etiqueta">Servicios <br /><input type="text" placeholder="$" /></p>
-            <p class="Etiqueta">Ocio <br /><input type="text" placeholder="$" /></p>
-            <p class="Etiqueta">Salud <br /><input type="text" placeholder="$" /></p>
-            <p class="Etiqueta">Extras <br /><input type="text" placeholder="$" /></p>
-
+        <div class="Header">
+            <h2 class="Titulo">Registro de Gastos</h2>
         </div>
 
-        <br /><br />
+        <div class="Seccion">
+            <p class="subtitulo">Fecha</p>
+            <input type="date" class="InputFecha" />
+        </div>
+
+        <div class="Seccion">
+            <p class="subtitulo">Ingrese sus gastos</p>
+
+            <div class="Etiquetas">
+
+                <div class="CardGasto">
+                    <p class="Etiqueta">🍔 Comida</p>
+                    <input type="text" placeholder="Ej: 12000" />
+                </div>
+
+                <div class="CardGasto">
+                    <p class="Etiqueta">🏠 Vivienda</p>
+                    <input type="text" placeholder="Ej: 45000" />
+                </div>
+
+                <div class="CardGasto">
+                    <p class="Etiqueta">💡 Servicios</p>
+                    <input type="text" placeholder="Ej: 8000" />
+                </div>
+
+                <div class="CardGasto">
+                    <p class="Etiqueta">🎮 Ocio</p>
+                    <input type="text" placeholder="Ej: 6000" />
+                </div>
+
+                <div class="CardGasto">
+                    <p class="Etiqueta">❤️ Salud</p>
+                    <input type="text" placeholder="Ej: 3000" />
+                </div>
+
+                <div class="CardGasto">
+                    <p class="Etiqueta">📦 Extras</p>
+                    <input type="text" placeholder="Ej: 5000" />
+                </div>
+
+            </div>
+        </div>
 
         <div class="ContenedorBotones">
 
-            <button class="botones">
+            <button class="botones Guardar">
                 Guardar
             </button>
 
-            <button class="botones">
+            <button class="botones Borrar">
                 Borrar
             </button>
 
         </div>
 
-        <br /><br />
-
-        <p class="subtitulo2" >(Las etiquetas se pueden cambiar en el menu de "Opciones")</p>
+        <p class="subtitulo2">
+            Las etiquetas se pueden modificar desde el menú de opciones
+        </p>
 
     </div>
 
