@@ -1,4 +1,5 @@
 ﻿@page "/Gastos"
+@inject mnts.Services.GastosService GastosService
 
 <div class="ContenedorGastosMain">
 
@@ -14,7 +15,7 @@
 
         <div class="Seccion">
             <p class="subtitulo">Fecha</p>
-            <input type="date" class="InputFecha" />
+            <input type="date" class="InputFecha" @bind="fecha" />
         </div>
 
         <div class="Seccion">
@@ -24,32 +25,32 @@
 
                 <div class="CardGasto">
                     <p class="Etiqueta">🍔 Comida</p>
-                    <input type="text" placeholder="Ej: 12000" />
+                    <input type="text" placeholder="Ej: 12000" @bind="inputComida" />
                 </div>
 
                 <div class="CardGasto">
                     <p class="Etiqueta">🏠 Vivienda</p>
-                    <input type="text" placeholder="Ej: 45000" />
+                    <input type="text" placeholder="Ej: 45000" @bind="inputVivienda" />
                 </div>
 
                 <div class="CardGasto">
                     <p class="Etiqueta">💡 Servicios</p>
-                    <input type="text" placeholder="Ej: 8000" />
+                    <input type="text" placeholder="Ej: 8000" @bind="inputServicios" />
                 </div>
 
                 <div class="CardGasto">
                     <p class="Etiqueta">🎮 Ocio</p>
-                    <input type="text" placeholder="Ej: 6000" />
+                    <input type="text" placeholder="Ej: 6000" @bind="inputOcio" />
                 </div>
 
                 <div class="CardGasto">
                     <p class="Etiqueta">❤️ Salud</p>
-                    <input type="text" placeholder="Ej: 3000" />
+                    <input type="text" placeholder="Ej: 3000" @bind="inputSalud" />
                 </div>
 
                 <div class="CardGasto">
                     <p class="Etiqueta">📦 Extras</p>
-                    <input type="text" placeholder="Ej: 5000" />
+                    <input type="text" placeholder="Ej: 5000" @bind="inputExtras" />
                 </div>
 
             </div>
@@ -57,20 +58,105 @@
 
         <div class="ContenedorBotones">
 
-            <button class="botones Guardar">
+            <button class="botones Guardar" @onclick="GuardarGastos">
                 Guardar
             </button>
 
-            <button class="botones Borrar">
+            <button class="botones Borrar" @onclick="() => LimpiarCampos()">
                 Borrar
             </button>
 
         </div>
 
-        <p class="subtitulo2">
-            Las etiquetas se pueden modificar desde el menú de opciones
-        </p>
+        @if (!string.IsNullOrEmpty(mensaje))
+        {
+            <p class="subtitulo2">@mensaje</p>
+        }
+        else
+        {
+            <p class="subtitulo2">
+                Las etiquetas se pueden modificar desde el menú de opciones
+            </p>
+        }
 
     </div>
 
 </div>
+
+@code {
+
+    private DateOnly? fecha;
+    private string? inputComida;
+    private string? inputVivienda;
+    private string? inputServicios;
+    private string? inputOcio;
+    private string? inputSalud;
+    private string? inputExtras;
+    private string? mensaje;
+
+    private async Task GuardarGastos()
+    {
+        if (fecha is null)
+        {
+            mensaje = "Error, seleccione una fecha válida";
+            await MostrarMensajeTemporal();
+            return;
+        }
+
+        var categorias = new Dictionary<string, string?>
+        {
+            { "Comida", inputComida },
+            { "Vivienda", inputVivienda },
+            { "Servicios", inputServicios },
+            { "Ocio", inputOcio },
+            { "Salud", inputSalud },
+            { "Extras", inputExtras }
+        };
+
+        var seGuardoAlgo = false;
+
+        foreach (var (categoria, valor) in categorias)
+        {
+            if (!string.IsNullOrWhiteSpace(valor) && double.TryParse(valor, out var monto))
+            {
+                await GastosService.InsertarGastoAsync(fecha.Value.Day, fecha.Value.Month, fecha.Value.Year, categoria, monto);
+                seGuardoAlgo = true;
+            }
+        }
+
+        mensaje = seGuardoAlgo
+            ? "Gastos guardados correctamente"
+            : "Ingrese al menos un gasto";
+
+        if (seGuardoAlgo)
+        {
+            LimpiarCampos(borrarMensaje: false);
+        }
+
+        await MostrarMensajeTemporal();
+    }
+
+    private async Task MostrarMensajeTemporal()
+    {
+        StateHasChanged();
+        await Task.Delay(1500);
+        mensaje = null;
+        StateHasChanged();
+    }
+
+    private void LimpiarCampos(bool borrarMensaje = true)
+    {
+        inputComida = null;
+        inputVivienda = null;
+        inputServicios = null;
+        inputOcio = null;
+        inputSalud = null;
+        inputExtras = null;
+
+        if (borrarMensaje)
+        {
+            mensaje = null;
+        }
+    }
+
+}

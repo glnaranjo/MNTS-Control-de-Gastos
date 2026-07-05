@@ -1,4 +1,5 @@
 ﻿@page "/Ingresos"
+@inject mnts.Services.GastosService GastosService
 
 <div class="ContenedorGastosMain">
 
@@ -15,37 +16,69 @@
 
         <div class="Seccion">
             <p class="subtitulo">Ingrese la fecha</p>
-
-            <div class="FechaMesAno">
-                <div class="CampoFecha">
-                    <label class="LabelMesAno">Mes</label>
-                    <input type="number" min="1" max="12" placeholder="MM" class="InputMesAno" />
-                </div>
-
-                <span class="SeparadorFecha">/</span>
-
-                <div class="CampoFecha">
-                    <label class="LabelMesAno">Año</label>
-                    <input type="number" placeholder="AAAA" class="InputMesAno" />
-                </div>
-            </div>
+            <input type="date" class="InputFecha" @bind="fecha" />
         </div>
 
         <div class="Seccion">
             <p class="subtitulo">¿Qué cantidad desea añadir?</p>
 
             <div class="CantidadWrapper">
-                <input type="text" placeholder="Ej: 50000" class="InputCantidad" />
+                <input type="text" placeholder="Ej: 50000" class="InputCantidad" @bind="cantidad" />
                 <span class="SimboloMoneda">$</span>
             </div>
         </div>
 
         <div class="ContenedorBotones">
-            <button class="botones Guardar">
+            <button class="botones Guardar" @onclick="GuardarIngreso">
                 Enviar
             </button>
         </div>
 
+        @if (!string.IsNullOrEmpty(mensaje))
+        {
+            <p class="subtitulo2">@mensaje</p>
+        }
+
     </div>
 
 </div>
+
+@code {
+
+    private DateOnly? fecha;
+    private string? cantidad;
+    private string? mensaje;
+
+    private async Task GuardarIngreso()
+    {
+        if (fecha is null)
+        {
+            mensaje = "Error, seleccione una fecha válida";
+            await MostrarMensajeTemporal();
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(cantidad) || !double.TryParse(cantidad, out var monto))
+        {
+            mensaje = "Error, ingrese una cantidad válida";
+            await MostrarMensajeTemporal();
+            return;
+        }
+
+        await GastosService.InsertarIngresoAsync(fecha.Value.Month, fecha.Value.Year, monto);
+
+        mensaje = "Presupuesto guardado correctamente";
+        cantidad = null;
+
+        await MostrarMensajeTemporal();
+    }
+
+    private async Task MostrarMensajeTemporal()
+    {
+        StateHasChanged();
+        await Task.Delay(1500);
+        mensaje = null;
+        StateHasChanged();
+    }
+
+}

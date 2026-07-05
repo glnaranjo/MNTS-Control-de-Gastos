@@ -9,43 +9,75 @@
     <div class="menu-inicio">
 
         <div>
-            <img src="./images/logo.png" class="logoPrinc" />
+            @if (!mostrarOpciones)
+            {
+                <img src="./images/logo.png" class="logoPrinc" />
+            }
 
             <p class="textoLogo">
-                Control de gastos
+                @(mostrarOpciones ? "Opciones" : "Control de gastos")
             </p>
         </div>
 
-        <div class="contenedor-botones">
+        @if (!mostrarOpciones)
+        {
+            <div class="contenedor-botones">
 
-            <NavLink href="/Gastos" class="botones">
-                Ingresar gastos
-            </NavLink>
+                <NavLink href="/Gastos" class="botones">
+                    Ingresar gastos
+                </NavLink>
 
-            <NavLink href="/Resumen" class="botones">
-                Ver resumen mensual
-            </NavLink>
+                <NavLink href="/Resumen" class="botones">
+                    Ver resumen mensual
+                </NavLink>
 
-            <NavLink href="/Ingresos" class="botones">
-                Añadir ingresos
-            </NavLink>
+                <NavLink href="/Ingresos" class="botones">
+                    Añadir ingresos
+                </NavLink>
 
-            <NavLink href="/Opciones" class="botones">
-                Opciones
-            </NavLink>
+                <button class="botones" @onclick="() => mostrarOpciones = true">
+                    Opciones
+                </button>
 
-            <button class="botones" @onclick="CerrarApp" style="background-color: #f22c2c">
-                Salir
-            </button>
+                <button class="botones botonSalir" @onclick="CerrarApp">
+                    Salir
+                </button>
 
-        </div>
+            </div>
+        }
+        else
+        {
+            <div class="contenedor-botones">
+
+                <NavLink href="/BorrarGastos" class="botones">
+                    Borrar gastos
+                </NavLink>
+
+                <NavLink href="/BorrarPresupuesto" class="botones">
+                    Borrar presupuesto/ingresos
+                </NavLink>
+
+                <NavLink href="/ManualUso" class="botones">
+                    Manual de uso
+                </NavLink>
+
+                <NavLink href="/Contacto" class="botones">
+                    Contacto
+                </NavLink>
+
+                <button class="botones botonVolver" @onclick="() => mostrarOpciones = false">
+                    Volver
+                </button>
+
+            </div>
+        }
 
     </div>
 </div>
 
-
-
 @code {
+
+    bool mostrarOpciones = false;
 
     void CerrarApp()
     {
