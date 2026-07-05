@@ -1,1 +1,51 @@
 ﻿@page "/Ingresos"
+
+<div class="ContenedorGastosMain">
+
+    <NavLink href="/" class="BotonVolver">
+        ← Volver
+    </NavLink>
+
+    <div class="ContenedorCentro">
+
+        <div class="Header">
+            <h2 class="Titulo">Añadir Ingresos</h2>
+            <p class="Descripcion">Presupuesto mensual</p>
+        </div>
+
+        <div class="Seccion">
+            <p class="subtitulo">Ingrese la fecha</p>
+
+            <div class="FechaMesAno">
+                <div class="CampoFecha">
+                    <label class="LabelMesAno">Mes</label>
+                    <input type="number" min="1" max="12" placeholder="MM" class="InputMesAno" />
+                </div>
+
+                <span class="SeparadorFecha">/</span>
+
+                <div class="CampoFecha">
+                    <label class="LabelMesAno">Año</label>
+                    <input type="number" placeholder="AAAA" class="InputMesAno" />
+                </div>
+            </div>
+        </div>
+
+        <div class="Seccion">
+            <p class="subtitulo">¿Qué cantidad desea añadir?</p>
+
+            <div class="CantidadWrapper">
+                <input type="text" placeholder="Ej: 50000" class="InputCantidad" />
+                <span class="SimboloMoneda">$</span>
+            </div>
+        </div>
+
+        <div class="ContenedorBotones">
+            <button class="botones Guardar">
+                Enviar
+            </button>
+        </div>
+
+    </div>
+
+</div>

@@ -93,6 +93,17 @@ body,
         transform: scale(1.02);
     }
 
-    ::deep .botones:last-child {
-        background-color: #f22c2c;
+::deep .botonSalir {
+    background-color: #f22c2c;
+}
+
+::deep .botonVolver {
+    background-color: transparent;
+    color: #3c40ea;
+    border: 2px solid #3c40ea;
+}
+
+    ::deep .botonVolver:hover {
+        background-color: #3c40ea;
+        color: white;
     }
