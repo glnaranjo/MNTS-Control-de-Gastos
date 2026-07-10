@@ -1,0 +1,140 @@
+﻿@page "/BorrarPresupuesto"
+@inject mnts.Services.GastosService GastosService
+
+<div class="ContenedorGastosMain">
+
+    <NavLink href="/" class="BotonVolver">
+        ← Volver
+    </NavLink>
+
+    <div class="ContenedorCentro">
+
+        <div class="Header">
+            <h2 class="Titulo">Borrar Presupuesto/Ingreso</h2>
+        </div>
+
+        @if (estado == EstadoBorrado.Formulario)
+        {
+            <div class="Seccion">
+                <p class="subtitulo">Ingrese la fecha</p>
+
+                <div class="CamposFecha">
+                    <div class="CampoFecha">
+                        <label class="LabelCampo">Mes</label>
+                        <input type="number" min="1" max="12" placeholder="MM" class="InputCampo" @bind="mes" />
+                    </div>
+
+                    <span class="SeparadorFecha">/</span>
+
+                    <div class="CampoFecha">
+                        <label class="LabelCampo">Año</label>
+                        <input type="number" placeholder="AAAA" class="InputCampo" @bind="anio" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="ContenedorBotones">
+                <button class="botones Borrar" @onclick="IniciarConfirmacion">
+                    Borrar
+                </button>
+            </div>
+
+            <div class="Avisos">
+                <p class="subtitulo2">*AVISO: Esto borrará TODO el presupuesto del mes seleccionado*</p>
+            </div>
+
+            @if (!string.IsNullOrEmpty(mensajeError))
+            {
+                <p class="subtitulo2 MensajeError">@mensajeError</p>
+            }
+        }
+        else if (estado == EstadoBorrado.Confirmando)
+        {
+            <div class="Seccion">
+                <p class="subtitulo2">¿Estás seguro?</p>
+            </div>
+
+            <div class="ContenedorBotones">
+                <button class="botones Borrar" @onclick="ConfirmarBorrado">
+                    Sí
+                </button>
+
+                <button class="botones Guardar" @onclick="CancelarConfirmacion">
+                    No
+                </button>
+            </div>
+        }
+        else
+        {
+            <div class="Seccion">
+                <p class="subtitulo2">@mensajeResultado</p>
+            </div>
+
+            <div class="ContenedorBotones">
+                <button class="botones Guardar" @onclick="Reiniciar">
+                    Ok
+                </button>
+            </div>
+        }
+
+    </div>
+
+</div>
+
+@code {
+
+    private enum EstadoBorrado { Formulario, Confirmando, Resultado }
+
+    private EstadoBorrado estado = EstadoBorrado.Formulario;
+
+    private int? mes;
+    private int? anio;
+
+    private string? mensajeError;
+    private string? mensajeResultado;
+
+    private void IniciarConfirmacion()
+    {
+        mensajeError = null;
+
+        if (mes is null || mes < 1 || mes > 12)
+        {
+            mensajeError = "Error, ingrese un mes válido (1-12)";
+            return;
+        }
+
+        if (anio is null || anio < 2000)
+        {
+            mensajeError = "Error, ingrese un año válido";
+            return;
+        }
+
+        estado = EstadoBorrado.Confirmando;
+    }
+
+    private void CancelarConfirmacion()
+    {
+        estado = EstadoBorrado.Formulario;
+    }
+
+    private async Task ConfirmarBorrado()
+    {
+        var borrados = await GastosService.BorrarPresupuestoAsync(mes!.Value, anio!.Value);
+
+        mensajeResultado = borrados == 0
+            ? "No había presupuesto para borrar en ese mes"
+            : $"Se eliminó el presupuesto correctamente ({borrados} registro(s))";
+
+        estado = EstadoBorrado.Resultado;
+    }
+
+    private void Reiniciar()
+    {
+        mes = null;
+        anio = null;
+        mensajeError = null;
+        mensajeResultado = null;
+        estado = EstadoBorrado.Formulario;
+    }
+
+}
