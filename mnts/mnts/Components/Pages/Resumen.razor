@@ -95,6 +95,20 @@
                             <p class="stat">- El día con menor gasto fue el @diaMenor ($@montoDiaMenor.ToString("N2"))</p>
                         }
 
+                        <div class="GraficoLinea">
+                            <ApexChart TItem="PuntoHistorial"
+                                       Title="Evolución de gastos"
+                                       Height="300">
+                                <ApexPointSeries TItem="PuntoHistorial"
+                                                 Items="historialGrafico"
+                                                 Name="Gasto total"
+                                                 SeriesType="SeriesType.Line"
+                                                 XValue="e => e.Etiqueta"
+                                                 YValue="e => (decimal)e.Total"
+                                                 ShowDataLabels="false" />
+                            </ApexChart>
+                        </div>
+
                     </div>
 
                 </div>
@@ -137,6 +151,17 @@
     private double montoDiaMenor;
     private string textoComparacion = "";
     private string claseComparacion = "";
+
+    private static readonly string[] NombresMeses =
+    { "Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic" };
+
+    private class PuntoHistorial
+    {
+        public string Etiqueta { get; set; } = "";
+        public double Total { get; set; }
+    }
+
+    private List<PuntoHistorial> historialGrafico = new();
 
     private async Task VerResumen()
     {
@@ -195,6 +220,16 @@
                 textoComparacion = "- Se gastó lo mismo que el mes anterior";
                 claseComparacion = "";
             }
+
+            var historial = await GastosService.ObtenerHistorialGastosAsync(mes.Value, anio.Value, 6);
+
+            historialGrafico = historial
+                .Select(h => new PuntoHistorial
+                {
+                    Etiqueta = $"{NombresMeses[h.Mes - 1]} {h.Anio}",
+                    Total = h.Total
+                })
+                .ToList();
         }
 
         mostrarResumen = true;

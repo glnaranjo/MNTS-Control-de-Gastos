@@ -104,6 +104,30 @@ public class GastosService
         public double Total { get; set; }
     }
 
+    public async Task<List<HistorialMes>> ObtenerHistorialGastosAsync(int mesFinal, int anioFinal, int cantidadMeses)
+    {
+        var resultado = new List<HistorialMes>();
+
+        var mes = mesFinal;
+        var anio = anioFinal;
+
+        for (int i = 0; i < cantidadMeses; i++)
+        {
+            var total = await ObtenerTotalGastosAsync(mes, anio);
+            resultado.Add(new HistorialMes { Mes = mes, Anio = anio, Total = total });
+
+            mes--;
+            if (mes < 1)
+            {
+                mes = 12;
+                anio--;
+            }
+        }
+
+        resultado.Reverse(); // para que quede en orden cronológico (mas viejo -> mas nuevo)
+        return resultado;
+    }
+
     // Ingresos
 
     public async Task InsertarIngresoAsync(int mes, int anio, double monto)
