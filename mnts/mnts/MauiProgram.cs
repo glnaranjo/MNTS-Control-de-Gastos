@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using ApexCharts;
 
 namespace mnts
 {
@@ -17,6 +18,8 @@ namespace mnts
             builder.Services.AddMauiBlazorWebView();
 
             builder.Services.AddSingleton<Services.GastosService>();
+
+            builder.Services.AddApexCharts();
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();

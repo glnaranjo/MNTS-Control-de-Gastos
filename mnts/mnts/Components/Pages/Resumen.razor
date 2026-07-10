@@ -1,5 +1,6 @@
 ﻿@page "/Resumen"
 @inject mnts.Services.GastosService GastosService
+@using ApexCharts
 
 <div class="ContenedorGastosMain">
 
@@ -65,6 +66,20 @@
                                 <span class="PorcentajeCategoria">(@porcentaje.ToString("N3")%)</span>
                             </div>
                         }
+
+                        <div class="GraficoTorta">
+                            <ApexChart TItem="mnts.Models.ResumenCategoria"
+                                       Title="Distribución de gastos"
+                                       Height="320">
+                                <ApexPointSeries TItem="mnts.Models.ResumenCategoria"
+                                                 Items="categorias"
+                                                 Name="Gastos"
+                                                 SeriesType="SeriesType.Donut"
+                                                 XValue="e => e.Categoria"
+                                                 YValue="e => (decimal)e.Total" />
+                            </ApexChart>
+                        </div>
+
                     </div>
 
                     <div class="ColumnaStats">

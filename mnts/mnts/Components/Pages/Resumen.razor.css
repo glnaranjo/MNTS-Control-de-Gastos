@@ -311,3 +311,9 @@ body {
     visibility: hidden;
     margin-bottom: 6px;
 }
+
+.GraficoTorta {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+}
