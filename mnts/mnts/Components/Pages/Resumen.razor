@@ -1,1 +1,192 @@
 ﻿@page "/Resumen"
+@inject mnts.Services.GastosService GastosService
+
+<div class="ContenedorGastosMain">
+
+    <NavLink href="/" class="BotonVolver">
+        ← Volver
+    </NavLink>
+
+    <div class="ContenedorCentro">
+
+        <div class="Header">
+            <h2 class="Titulo">Resumen Mensual</h2>
+        </div>
+
+        <div class="Seccion">
+            <p class="subtitulo">Seleccione la fecha</p>
+
+            <div class="CamposFecha">
+                <div class="CampoFecha">
+                    <label class="LabelCampo">Mes</label>
+                    <input type="number" min="1" max="12" placeholder="MM" class="InputCampo" @bind="mes" />
+                </div>
+
+                <span class="SeparadorFecha">/</span>
+
+                <div class="CampoFecha">
+                    <label class="LabelCampo">Año</label>
+                    <input type="number" placeholder="AAAA" class="InputCampo" @bind="anio" />
+                </div>
+            </div>
+        </div>
+
+        <div class="ContenedorBotones">
+            <button class="botones Guardar" @onclick="VerResumen">
+                Ver
+            </button>
+        </div>
+
+        @if (!string.IsNullOrEmpty(mensajeError))
+        {
+            <p class="subtitulo2 MensajeError">@mensajeError</p>
+        }
+
+        @if (mostrarResumen)
+        {
+            @if (!hayDatos)
+            {
+                <p class="subtitulo2">No hay gastos ni ingresos registrados para este mes</p>
+            }
+            else
+            {
+                <div class="GridResumen">
+
+                    <div class="ColumnaCategorias">
+                        <p class="subtituloResumen">Resumen</p>
+
+                        @foreach (var item in categorias)
+                        {
+                            var porcentaje = totalGastos > 0 ? (item.Total / totalGastos) * 100 : 0;
+
+                            <div class="FilaCategoria">
+                                <span class="NombreCategoria">@item.Categoria</span>
+                                <span class="MontoCategoria">$@item.Total.ToString("N2")</span>
+                                <span class="PorcentajeCategoria">(@porcentaje.ToString("N3")%)</span>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="ColumnaStats">
+                        @if (diaMayor is not null)
+                        {
+                            <p class="stat">- El día con mayor gasto fue el @diaMayor ($@montoDiaMayor.ToString("N2"))</p>
+                        }
+
+                        @if (diaMenor is not null)
+                        {
+                            <p class="stat">- El día con menor gasto fue el @diaMenor ($@montoDiaMenor.ToString("N2"))</p>
+                        }
+                    </div>
+
+                </div>
+
+                <div class="Totales">
+                    <p>Gasto total: <span class="MontoNegativo">-$@totalGastos.ToString("N2")</span></p>
+                    <p>Ingreso total: <span class="MontoPositivo">+$@totalIngresos.ToString("N2")</span></p>
+                    <p>Diferencia: <span class="@claseDiferencia">@(diferencia >= 0 ? "+" : "-")$@Math.Abs(diferencia).ToString("N2")</span></p>
+                </div>
+
+                <div class="ContenedorBotones">
+                    <button class="botones Borrar" @onclick="LimpiarResumen">
+                        Borrar
+                    </button>
+                </div>
+            }
+        }
+
+    </div>
+
+</div>
+
+@code {
+
+    private int? mes;
+    private int? anio;
+    private string? mensajeError;
+    private bool mostrarResumen = false;
+    private bool hayDatos = false;
+
+    private List<mnts.Models.ResumenCategoria> categorias = new();
+    private double totalGastos;
+    private double totalIngresos;
+    private double diferencia;
+    private string claseDiferencia = "";
+
+    private int? diaMayor;
+    private double montoDiaMayor;
+    private int? diaMenor;
+    private double montoDiaMenor;
+    private string textoComparacion = "";
+    private string claseComparacion = "";
+
+    private async Task VerResumen()
+    {
+        mensajeError = null;
+        mostrarResumen = false;
+
+        if (mes is null || mes < 1 || mes > 12)
+        {
+            mensajeError = "Error, ingrese un mes válido (1-12)";
+            return;
+        }
+
+        if (anio is null || anio < 2000)
+        {
+            mensajeError = "Error, ingrese un año válido";
+            return;
+        }
+
+        categorias = await GastosService.ObtenerResumenPorCategoriaAsync(mes.Value, anio.Value);
+        totalGastos = await GastosService.ObtenerTotalGastosAsync(mes.Value, anio.Value);
+        totalIngresos = await GastosService.ObtenerTotalIngresosAsync(mes.Value, anio.Value);
+
+        hayDatos = categorias.Count > 0 || totalGastos > 0 || totalIngresos > 0;
+
+        if (hayDatos)
+        {
+            diferencia = totalIngresos - totalGastos;
+            claseDiferencia = diferencia > 0 ? "MontoPositivo" : diferencia < 0 ? "MontoNegativo" : "";
+
+            var (diaMax, montoMax) = await GastosService.ObtenerDiaMayorGastoAsync(mes.Value, anio.Value);
+            diaMayor = diaMax;
+            montoDiaMayor = montoMax;
+
+            var (diaMin, montoMin) = await GastosService.ObtenerDiaMenorGastoAsync(mes.Value, anio.Value);
+            diaMenor = diaMin;
+            montoDiaMenor = montoMin;
+
+            var mesAnterior = mes.Value == 1 ? 12 : mes.Value - 1;
+            var anioAnterior = mes.Value == 1 ? anio.Value - 1 : anio.Value;
+            var totalMesAnterior = await GastosService.ObtenerTotalGastosAsync(mesAnterior, anioAnterior);
+
+            var diferenciaAnterior = totalGastos - totalMesAnterior;
+
+            if (diferenciaAnterior > 0)
+            {
+                textoComparacion = $"- Se gastó ${diferenciaAnterior.ToString("N2")} más que el mes anterior";
+                claseComparacion = "MontoNegativo";
+            }
+            else if (diferenciaAnterior < 0)
+            {
+                textoComparacion = $"- Se gastó ${Math.Abs(diferenciaAnterior).ToString("N2")} menos que el mes anterior";
+                claseComparacion = "MontoPositivo";
+            }
+            else
+            {
+                textoComparacion = "- Se gastó lo mismo que el mes anterior";
+                claseComparacion = "";
+            }
+        }
+
+        mostrarResumen = true;
+    }
+
+    private void LimpiarResumen()
+    {
+        mostrarResumen = false;
+        hayDatos = false;
+        categorias.Clear();
+    }
+
+}

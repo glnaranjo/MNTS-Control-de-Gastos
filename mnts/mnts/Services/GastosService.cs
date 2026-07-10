@@ -74,6 +74,36 @@ public class GastosService
             .DeleteAsync(g => g.Dia == dia && g.Mes == mes && g.Anio == anio);
     }
 
+    public async Task<(int? dia, double monto)> ObtenerDiaMayorGastoAsync(int mes, int anio)
+    {
+        await InitAsync();
+
+        var query = @"SELECT Dia, SUM(Monto) as Total FROM Gasto 
+                  WHERE Mes = ? AND Anio = ? 
+                  GROUP BY Dia ORDER BY Total DESC LIMIT 1";
+
+        var resultado = await _db!.QueryAsync<ResumenDia>(query, mes, anio);
+        return resultado.Count > 0 ? (resultado[0].Dia, resultado[0].Total) : (null, 0);
+    }
+
+    public async Task<(int? dia, double monto)> ObtenerDiaMenorGastoAsync(int mes, int anio)
+    {
+        await InitAsync();
+
+        var query = @"SELECT Dia, SUM(Monto) as Total FROM Gasto 
+                  WHERE Mes = ? AND Anio = ? 
+                  GROUP BY Dia ORDER BY Total ASC LIMIT 1";
+
+        var resultado = await _db!.QueryAsync<ResumenDia>(query, mes, anio);
+        return resultado.Count > 0 ? (resultado[0].Dia, resultado[0].Total) : (null, 0);
+    }
+
+    private class ResumenDia
+    {
+        public int Dia { get; set; }
+        public double Total { get; set; }
+    }
+
     // Ingresos
 
     public async Task InsertarIngresoAsync(int mes, int anio, double monto)
