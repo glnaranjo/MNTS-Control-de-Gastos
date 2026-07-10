@@ -362,3 +362,8 @@ body {
 .ColumnaStatsDia .stat {
     text-align: center;
 }
+
+.MensajeExito {
+    color: #1a9e4b;
+    font-weight: 600;
+}

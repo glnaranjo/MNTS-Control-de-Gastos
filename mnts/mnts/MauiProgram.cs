@@ -21,6 +21,8 @@ namespace mnts
 
             builder.Services.AddApexCharts();
 
+            builder.Services.AddSingleton<Services.ExportService>();
+
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();

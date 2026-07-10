@@ -1,6 +1,7 @@
 ﻿@page "/Resumen"
 @inject mnts.Services.GastosService GastosService
 @using ApexCharts
+@inject mnts.Services.ExportService ExportService
 
 <div class="ContenedorGastosMain">
 
@@ -134,10 +135,19 @@
                 </div>
 
                 <div class="ContenedorBotones">
+                    <button class="botones Guardar" @onclick="ExportarAExcel">
+                        Exportar
+                    </button>
+
                     <button class="botones Borrar" @onclick="LimpiarResumen">
                         Borrar
                     </button>
                 </div>
+
+                @if (!string.IsNullOrEmpty(mensajeExportacion))
+                {
+                    <p class="subtitulo2 MensajeExito">@mensajeExportacion</p>
+                }
             }
         }
 
@@ -256,4 +266,41 @@
         categorias.Clear();
     }
 
+    private string? mensajeExportacion;
+
+    private async Task ExportarAExcel()
+    {
+        var datos = new mnts.Models.ResumenExportData
+        {
+            Mes = mes!.Value,
+            Anio = anio!.Value,
+            Categorias = categorias,
+            TotalGastos = totalGastos,
+            TotalIngresos = totalIngresos,
+            Diferencia = diferencia,
+            DiaMayor = diaMayor,
+            MontoDiaMayor = montoDiaMayor,
+            DiaMenor = diaMenor,
+            MontoDiaMenor = montoDiaMenor
+        };
+
+        string ruta;
+
+        try
+        {
+            ruta = ExportService.ExportarExcel(datos);
+        }
+        catch (Exception ex)
+        {
+            mensajeExportacion = $"Error al exportar: {ex.Message}";
+            return;
+        }
+
+        mensajeExportacion = $"Archivo exportado correctamente en: {ruta}";
+
+        await Launcher.Default.OpenAsync(new OpenFileRequest
+        {
+            File = new ReadOnlyFile(ruta)
+        });
+    }
 }
