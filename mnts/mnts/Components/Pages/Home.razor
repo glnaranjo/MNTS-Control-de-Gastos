@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject mnts.Services.GastosService GastosService
 
 <div class="contenedor-main">
 
@@ -65,6 +66,10 @@
                     Contacto
                 </NavLink>
 
+                <button class="botones botonPeligro" @onclick="AbrirModalReinicio">
+                    Reiniciar Datos
+                </button>
+
                 <button class="botones botonVolver" @onclick="() => mostrarOpciones = false">
                     Volver
                 </button>
@@ -75,13 +80,86 @@
     </div>
 </div>
 
+@if (mostrarModalReinicio)
+{
+    <div class="ModalOverlay">
+        <div class="ModalContenido">
+
+            <h3 class="ModalTitulo">¿Estás seguro?</h3>
+
+            <p class="ModalTexto">
+                Esta acción eliminará <strong>TODOS</strong> los gastos e ingresos registrados,
+                de forma permanente. No se puede deshacer.
+            </p>
+
+            <p class="ModalTexto">
+                Para confirmar, escribí exactamente la siguiente frase:
+            </p>
+
+            <p class="ModalFrase">Deseo eliminar todos mis datos</p>
+
+            <input type="text" class="ModalInput" @bind="textoConfirmacion" @bind:event="oninput" placeholder="Escribí la frase aquí" />
+
+            @if (!string.IsNullOrEmpty(mensajeModal))
+            {
+                <p class="ModalMensaje">@mensajeModal</p>
+            }
+
+            <div class="ModalBotones">
+                <button class="botones botonPeligro" @onclick="ConfirmarReinicio">
+                    Confirmar
+                </button>
+
+                <button class="botones botonVolver" @onclick="CerrarModalReinicio">
+                    Cancelar
+                </button>
+            </div>
+
+        </div>
+    </div>
+}
+
 @code {
 
     bool mostrarOpciones = false;
+    bool mostrarModalReinicio = false;
+    string? textoConfirmacion;
+    string? mensajeModal;
+
+    const string FraseConfirmacion = "Deseo eliminar todos mis datos";
 
     void CerrarApp()
     {
         Application.Current?.Quit();
+    }
+
+    void AbrirModalReinicio()
+    {
+        mostrarModalReinicio = true;
+        textoConfirmacion = null;
+        mensajeModal = null;
+    }
+
+    void CerrarModalReinicio()
+    {
+        mostrarModalReinicio = false;
+        textoConfirmacion = null;
+        mensajeModal = null;
+    }
+
+    async Task ConfirmarReinicio()
+    {
+        if (textoConfirmacion != FraseConfirmacion)
+        {
+            mensajeModal = "El texto no coincide, intentá de nuevo";
+            return;
+        }
+
+        await GastosService.ReiniciarBaseDatosAsync();
+
+        mensajeModal = null;
+        mostrarModalReinicio = false;
+        mostrarOpciones = false;
     }
 
 }

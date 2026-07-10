@@ -68,6 +68,8 @@
                     </div>
 
                     <div class="ColumnaStats">
+                        <p class="subtituloResumen SpacerInvisible">.</p>
+
                         @if (diaMayor is not null)
                         {
                             <p class="stat">- El día con mayor gasto fue el @diaMayor ($@montoDiaMayor.ToString("N2"))</p>
@@ -77,6 +79,7 @@
                         {
                             <p class="stat">- El día con menor gasto fue el @diaMenor ($@montoDiaMenor.ToString("N2"))</p>
                         }
+
                     </div>
 
                 </div>

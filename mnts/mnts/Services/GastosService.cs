@@ -138,4 +138,14 @@ public class GastosService
         return await _db!.Table<Ingreso>()
             .DeleteAsync(i => i.Mes == mes && i.Anio == anio);
     }
+
+    // Borrar/Delete db
+
+    public async Task ReiniciarBaseDatosAsync()
+    {
+        await InitAsync();
+
+        await _db!.DeleteAllAsync<Gasto>();
+        await _db!.DeleteAllAsync<Ingreso>();
+    }
 }
