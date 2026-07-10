@@ -51,10 +51,42 @@
             }
             else
             {
-                <div class="GridResumen">
+
+
+
+                <div class="TarjetasTotales">
+                    <div class="TarjetaTotal">
+                        <p class="TarjetaLabel">Gasto total</p>
+                        <p class="TarjetaMonto MontoNegativo">-$@totalGastos.ToString("N2")</p>
+                    </div>
+
+                    <div class="TarjetaTotal">
+                        <p class="TarjetaLabel">Ingreso total</p>
+                        <p class="TarjetaMonto MontoPositivo">+$@totalIngresos.ToString("N2")</p>
+                    </div>
+
+                    <div class="TarjetaTotal">
+                        <p class="TarjetaLabel">Diferencia</p>
+                        <p class="TarjetaMonto @claseDiferencia">@(diferencia >= 0 ? "+" : "-")$@Math.Abs(diferencia).ToString("N2")</p>
+                    </div>
+                </div>
+
+                <div class="BloqueDistribucion">
+                    <div class="GraficoTorta">
+                        <ApexChart TItem="mnts.Models.ResumenCategoria"
+                                   Title="Distribución de gastos"
+                                   Height="320">
+                            <ApexPointSeries TItem="mnts.Models.ResumenCategoria"
+                                             Items="categorias"
+                                             Name="Gastos"
+                                             SeriesType="SeriesType.Donut"
+                                             XValue="e => e.Categoria"
+                                             YValue="e => (decimal)e.Total" />
+                        </ApexChart>
+                    </div>
 
                     <div class="ColumnaCategorias">
-                        <p class="subtituloResumen">Resumen</p>
+                        <p class="subtituloResumen">Detalle por categoría</p>
 
                         @foreach (var item in categorias)
                         {
@@ -66,25 +98,27 @@
                                 <span class="PorcentajeCategoria">(@porcentaje.ToString("N3")%)</span>
                             </div>
                         }
+                    </div>
+                </div>
 
-                        <div class="GraficoTorta">
-                            <ApexChart TItem="mnts.Models.ResumenCategoria"
-                                       Title="Distribución de gastos"
-                                       Height="320">
-                                <ApexPointSeries TItem="mnts.Models.ResumenCategoria"
-                                                 Items="categorias"
-                                                 Name="Gastos"
-                                                 SeriesType="SeriesType.Donut"
-                                                 XValue="e => e.Categoria"
-                                                 YValue="e => (decimal)e.Total" />
-                            </ApexChart>
-                        </div>
-
+                <div class="BloqueEvolucion">
+                    <div class="GraficoLinea">
+                        <ApexChart TItem="PuntoHistorial"
+                                   Title="Evolución de gastos (últimos 6 meses)"
+                                   Height="280">
+                            <ApexPointSeries TItem="PuntoHistorial"
+                                             Items="historialGrafico"
+                                             Name="Gasto total"
+                                             SeriesType="SeriesType.Line"
+                                             XValue="e => e.Etiqueta"
+                                             YValue="e => (decimal)e.Total"
+                                             ShowDataLabels="false" />
+                        </ApexChart>
                     </div>
 
-                    <div class="ColumnaStats">
-                        <p class="subtituloResumen SpacerInvisible">.</p>
+                    <br />
 
+                    <div class="ColumnaStatsDia">
                         @if (diaMayor is not null)
                         {
                             <p class="stat">- El día con mayor gasto fue el @diaMayor ($@montoDiaMayor.ToString("N2"))</p>
@@ -95,28 +129,8 @@
                             <p class="stat">- El día con menor gasto fue el @diaMenor ($@montoDiaMenor.ToString("N2"))</p>
                         }
 
-                        <div class="GraficoLinea">
-                            <ApexChart TItem="PuntoHistorial"
-                                       Title="Evolución de gastos"
-                                       Height="300">
-                                <ApexPointSeries TItem="PuntoHistorial"
-                                                 Items="historialGrafico"
-                                                 Name="Gasto total"
-                                                 SeriesType="SeriesType.Line"
-                                                 XValue="e => e.Etiqueta"
-                                                 YValue="e => (decimal)e.Total"
-                                                 ShowDataLabels="false" />
-                            </ApexChart>
-                        </div>
-
+                        <p class="stat @claseComparacion">@textoComparacion</p>
                     </div>
-
-                </div>
-
-                <div class="Totales">
-                    <p>Gasto total: <span class="MontoNegativo">-$@totalGastos.ToString("N2")</span></p>
-                    <p>Ingreso total: <span class="MontoPositivo">+$@totalIngresos.ToString("N2")</span></p>
-                    <p>Diferencia: <span class="@claseDiferencia">@(diferencia >= 0 ? "+" : "-")$@Math.Abs(diferencia).ToString("N2")</span></p>
                 </div>
 
                 <div class="ContenedorBotones">
