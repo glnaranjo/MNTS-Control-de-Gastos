@@ -22,37 +22,15 @@
             <p class="subtitulo">Ingrese sus gastos</p>
 
             <div class="Etiquetas">
-
-                <div class="CardGasto">
-                    <p class="Etiqueta">🍔 Comida</p>
-                    <input type="text" placeholder="Ej: 12000" @bind="inputComida" />
-                </div>
-
-                <div class="CardGasto">
-                    <p class="Etiqueta">🏠 Vivienda</p>
-                    <input type="text" placeholder="Ej: 45000" @bind="inputVivienda" />
-                </div>
-
-                <div class="CardGasto">
-                    <p class="Etiqueta">💡 Servicios</p>
-                    <input type="text" placeholder="Ej: 8000" @bind="inputServicios" />
-                </div>
-
-                <div class="CardGasto">
-                    <p class="Etiqueta">🎮 Ocio</p>
-                    <input type="text" placeholder="Ej: 6000" @bind="inputOcio" />
-                </div>
-
-                <div class="CardGasto">
-                    <p class="Etiqueta">❤️ Salud</p>
-                    <input type="text" placeholder="Ej: 3000" @bind="inputSalud" />
-                </div>
-
-                <div class="CardGasto">
-                    <p class="Etiqueta">📦 Extras</p>
-                    <input type="text" placeholder="Ej: 5000" @bind="inputExtras" />
-                </div>
-
+                @foreach (var etiqueta in etiquetas)
+                {
+                    <div class="CardGasto">
+                        <p class="Etiqueta">@etiqueta.Icono @etiqueta.Nombre</p>
+                        <input type="text" placeholder="Ej: 12000"
+                               value="@ObtenerValor(etiqueta.Id)"
+                               @oninput="e => ActualizarValor(etiqueta.Id, e.Value?.ToString())" />
+                    </div>
+                }
             </div>
         </div>
 
@@ -85,14 +63,23 @@
 
 @code {
 
+    private List<mnts.Models.Etiqueta> etiquetas = new();
+    private Dictionary<int, string?> valores = new();
     private DateOnly? fecha;
-    private string? inputComida;
-    private string? inputVivienda;
-    private string? inputServicios;
-    private string? inputOcio;
-    private string? inputSalud;
-    private string? inputExtras;
     private string? mensaje;
+
+    protected override async Task OnInitializedAsync()
+    {
+        etiquetas = await GastosService.ObtenerEtiquetasAsync();
+    }
+
+    private string? ObtenerValor(int id) =>
+        valores.TryGetValue(id, out var valor) ? valor : null;
+
+    private void ActualizarValor(int id, string? valor)
+    {
+        valores[id] = valor;
+    }
 
     private async Task GuardarGastos()
     {
@@ -103,23 +90,15 @@
             return;
         }
 
-        var categorias = new Dictionary<string, string?>
-        {
-            { "Comida", inputComida },
-            { "Vivienda", inputVivienda },
-            { "Servicios", inputServicios },
-            { "Ocio", inputOcio },
-            { "Salud", inputSalud },
-            { "Extras", inputExtras }
-        };
-
         var seGuardoAlgo = false;
 
-        foreach (var (categoria, valor) in categorias)
+        foreach (var etiqueta in etiquetas)
         {
-            if (!string.IsNullOrWhiteSpace(valor) && double.TryParse(valor, out var monto))
+            if (valores.TryGetValue(etiqueta.Id, out var valor) &&
+                !string.IsNullOrWhiteSpace(valor) &&
+                double.TryParse(valor, out var monto))
             {
-                await GastosService.InsertarGastoAsync(fecha.Value.Day, fecha.Value.Month, fecha.Value.Year, categoria, monto);
+                await GastosService.InsertarGastoAsync(fecha.Value.Day, fecha.Value.Month, fecha.Value.Year, etiqueta.Nombre, monto);
                 seGuardoAlgo = true;
             }
         }
@@ -146,12 +125,7 @@
 
     private void LimpiarCampos(bool borrarMensaje = true)
     {
-        inputComida = null;
-        inputVivienda = null;
-        inputServicios = null;
-        inputOcio = null;
-        inputSalud = null;
-        inputExtras = null;
+        valores.Clear();
 
         if (borrarMensaje)
         {

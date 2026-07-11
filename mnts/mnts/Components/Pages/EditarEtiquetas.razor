@@ -1,0 +1,98 @@
+﻿@page "/EditarEtiquetas"
+@inject mnts.Services.GastosService GastosService
+
+<div class="ContenedorGastosMain">
+
+    <NavLink href="/" class="BotonVolver">
+        ← Volver
+    </NavLink>
+
+    <div class="ContenedorCentro">
+
+        <div class="Header">
+            <h2 class="Titulo">Editar Categorías</h2>
+        </div>
+
+        <div class="Seccion">
+            <p class="subtitulo">Personalizá el nombre de tus categorías</p>
+
+            <div class="Etiquetas">
+                @foreach (var etiqueta in etiquetas)
+                {
+                    <div class="CardGasto">
+                        <div class="FilaEditorEtiqueta">
+                            <select class="SelectIcono" @bind="etiqueta.Icono">
+                                @foreach (var opcion in OpcionesIconos)
+                                {
+                                    <option value="@opcion">@opcion</option>
+                                }
+                            </select>
+
+                            <input type="text" @bind="etiqueta.Nombre" @bind:event="oninput" maxlength="20" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="ContenedorBotones">
+            <button class="botones Guardar" @onclick="GuardarCambios">
+                Guardar
+            </button>
+        </div>
+
+        @if (!string.IsNullOrEmpty(mensaje))
+        {
+            <p class="subtitulo2">@mensaje</p>
+        }
+
+    </div>
+
+</div>
+
+@code {
+
+    private List<mnts.Models.Etiqueta> etiquetas = new();
+    private string? mensaje;
+
+    private static readonly string[] OpcionesIconos =
+    {
+        "🍔", "🏠", "💡", "🎮", "❤️", "📦",
+        "🚍", "🎓", "💊", "🐾", "🎁", "☕",
+        "🛒", "✈️", "🎬", "💰", "🔧", "📱"
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        etiquetas = await GastosService.ObtenerEtiquetasAsync();
+    }
+
+    private async Task GuardarCambios()
+    {
+        foreach (var etiqueta in etiquetas)
+        {
+            if (string.IsNullOrWhiteSpace(etiqueta.Nombre))
+            {
+                mensaje = "Ningún nombre puede quedar vacío";
+                return;
+            }
+        }
+
+        foreach (var etiqueta in etiquetas)
+        {
+            await GastosService.ActualizarEtiquetaAsync(etiqueta.Id, etiqueta.Nombre.Trim(), etiqueta.Icono);
+        }
+
+        mensaje = "Categorías actualizadas correctamente";
+        await MostrarMensajeTemporal();
+    }
+
+    private async Task MostrarMensajeTemporal()
+    {
+        StateHasChanged();
+        await Task.Delay(1500);
+        mensaje = null;
+        StateHasChanged();
+    }
+
+}

@@ -15,12 +15,20 @@ public class GastosService
         if (_db is not null) return;
 
         var dbPath = Path.Combine(FileSystem.AppDataDirectory, "gastos.db");
-        System.Diagnostics.Debug.WriteLine($"BASE DE DATOS EN: {dbPath}");
-
         _db = new SQLiteAsyncConnection(dbPath);
 
         await _db.CreateTableAsync<Gasto>();
         await _db.CreateTableAsync<Ingreso>();
+        await _db.CreateTableAsync<Etiqueta>();
+
+        var cantidadEtiquetas = await _db.Table<Etiqueta>().CountAsync();
+        if (cantidadEtiquetas == 0)
+        {
+            foreach (var etiqueta in ObtenerEtiquetasPorDefecto())
+            {
+                await _db.InsertAsync(etiqueta);
+            }
+        }
     }
 
     // Gastos
@@ -171,5 +179,45 @@ public class GastosService
 
         await _db!.DeleteAllAsync<Gasto>();
         await _db!.DeleteAllAsync<Ingreso>();
+        await RestaurarEtiquetasAsync();
+    }
+
+    private static List<Etiqueta> ObtenerEtiquetasPorDefecto() => new()
+    {
+        new Etiqueta { Id = 1, ClaveInterna = "comida", Nombre = "Comida", Icono = "🍔" },
+        new Etiqueta { Id = 2, ClaveInterna = "vivienda", Nombre = "Vivienda", Icono = "🏠" },
+        new Etiqueta { Id = 3, ClaveInterna = "servicios", Nombre = "Servicios", Icono = "💡" },
+        new Etiqueta { Id = 4, ClaveInterna = "ocio", Nombre = "Ocio", Icono = "🎮" },
+        new Etiqueta { Id = 5, ClaveInterna = "salud", Nombre = "Salud", Icono = "❤️" },
+        new Etiqueta { Id = 6, ClaveInterna = "extras", Nombre = "Extras", Icono = "📦" },
+    };
+
+    public async Task<List<Etiqueta>> ObtenerEtiquetasAsync()
+    {
+        await InitAsync();
+        return await _db!.Table<Etiqueta>().OrderBy(e => e.Id).ToListAsync();
+    }
+
+    public async Task ActualizarEtiquetaAsync(int id, string nuevoNombre, string nuevoIcono)
+    {
+        await InitAsync();
+
+        var etiqueta = await _db!.Table<Etiqueta>().Where(e => e.Id == id).FirstOrDefaultAsync();
+        if (etiqueta is not null)
+        {
+            etiqueta.Nombre = nuevoNombre;
+            etiqueta.Icono = nuevoIcono;
+            await _db!.UpdateAsync(etiqueta);
+        }
+    }
+
+    public async Task RestaurarEtiquetasAsync()
+    {
+        await InitAsync();
+
+        foreach (var etiquetaDefault in ObtenerEtiquetasPorDefecto())
+        {
+            await _db!.UpdateAsync(etiquetaDefault);
+        }
     }
 }

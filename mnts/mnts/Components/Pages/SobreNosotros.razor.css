@@ -1,3 +1,4 @@
+
 html, body {
     margin: 0;
     padding: 0;
@@ -41,8 +42,6 @@ body {
     box-sizing: border-box;
 }
 
-/* --- ENCABEZADO --- */
-
 .Encabezado {
     display: flex;
     align-items: center;
@@ -67,8 +66,6 @@ body {
     font-weight: 500;
 }
 
-/* --- DESCRIPCION --- */
-
 .Descripcion {
     color: white;
     font-size: clamp(1.05rem, 1.8vw, 1.3rem);
@@ -84,15 +81,11 @@ body {
             margin-bottom: 0;
         }
 
-/* --- SEPARADOR --- */
-
 .Separador {
     width: min(100%, 550px);
     height: 1px;
     background: rgba(255, 255, 255, 0.4);
 }
-
-/* --- CONTACTO --- */
 
 .Contacto {
     display: flex;
@@ -112,8 +105,6 @@ body {
         opacity: 0.75;
         text-decoration: underline;
     }
-
-/* --- VERSION --- */
 
 ::deep .Version {
     position: absolute;
@@ -145,8 +136,6 @@ body {
         background: rgba(255,255,255,0.25);
         transform: translateX(-2px);
     }
-
-/* MOBILE */
 
 @media (max-width: 600px) {
 
@@ -204,3 +193,4 @@ body {
         margin-top: 6px;
     }
 }
+
