@@ -170,11 +170,11 @@
     {
         try
         {
-            var rutaDestino = Path.Combine(FileSystem.CacheDirectory, "ManualDeUso.pdf");
+            var rutaDestino = Path.Combine(FileSystem.CacheDirectory, "Manual De Uso.pdf");
 
             if (!File.Exists(rutaDestino))
             {
-                using var streamOrigen = await FileSystem.OpenAppPackageFileAsync("ManualDeUso.pdf");
+                using var streamOrigen = await FileSystem.OpenAppPackageFileAsync("Manual De Uso.pdf");
                 using var streamDestino = File.Create(rutaDestino);
                 await streamOrigen.CopyToAsync(streamDestino);
             }
