@@ -62,9 +62,9 @@
                     Editar categorías
                 </NavLink>
 
-                <NavLink href="/ManualUso" class="botones">
+                <button class="botones" @onclick="AbrirManualDeUso">
                     Manual de uso
-                </NavLink>
+                </button>
 
                 <NavLink href="/SobreNosotros" class="botones">
                     Sobre nosotros
@@ -97,12 +97,12 @@
             </p>
 
             <p class="ModalTexto">
-                Para confirmar, escribí exactamente la siguiente frase:
+                Para confirmar, escribe exactamente la siguiente frase:
             </p>
 
             <p class="ModalFrase">Deseo eliminar todos mis datos</p>
 
-            <input type="text" class="ModalInput" @bind="textoConfirmacion" @bind:event="oninput" placeholder="Escribí la frase aquí" />
+            <input type="text" class="ModalInput" @bind="textoConfirmacion" @bind:event="oninput" placeholder="Escribe la frase aquí" />
 
             @if (!string.IsNullOrEmpty(mensajeModal))
             {
@@ -164,6 +164,30 @@
         mensajeModal = null;
         mostrarModalReinicio = false;
         mostrarOpciones = false;
+    }
+
+    private async Task AbrirManualDeUso()
+    {
+        try
+        {
+            var rutaDestino = Path.Combine(FileSystem.CacheDirectory, "ManualDeUso.pdf");
+
+            if (!File.Exists(rutaDestino))
+            {
+                using var streamOrigen = await FileSystem.OpenAppPackageFileAsync("ManualDeUso.pdf");
+                using var streamDestino = File.Create(rutaDestino);
+                await streamOrigen.CopyToAsync(streamDestino);
+            }
+
+            await Launcher.Default.OpenAsync(new OpenFileRequest
+            {
+                File = new ReadOnlyFile(rutaDestino)
+            });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error al abrir el manual: {ex.Message}");
+        }
     }
 
 }
