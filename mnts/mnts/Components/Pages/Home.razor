@@ -78,6 +78,11 @@
                     Volver
                 </button>
 
+                @if (!string.IsNullOrEmpty(errorManual))
+                {
+                    <p style="color: red; text-align: center;">@errorManual</p>
+                }
+
             </div>
         }
 
@@ -166,18 +171,17 @@
         mostrarOpciones = false;
     }
 
+    private string? errorManual;
+
     private async Task AbrirManualDeUso()
     {
         try
         {
             var rutaDestino = Path.Combine(FileSystem.CacheDirectory, "Manual De Uso.pdf");
 
-            if (!File.Exists(rutaDestino))
-            {
-                using var streamOrigen = await FileSystem.OpenAppPackageFileAsync("Manual De Uso.pdf");
-                using var streamDestino = File.Create(rutaDestino);
-                await streamOrigen.CopyToAsync(streamDestino);
-            }
+            using var streamOrigen = await FileSystem.OpenAppPackageFileAsync("Manual De Uso.pdf");
+            using var streamDestino = File.Create(rutaDestino);
+            await streamOrigen.CopyToAsync(streamDestino);
 
             await Launcher.Default.OpenAsync(new OpenFileRequest
             {
@@ -186,7 +190,7 @@
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error al abrir el manual: {ex.Message}");
+            errorManual = ex.Message;
         }
     }
 

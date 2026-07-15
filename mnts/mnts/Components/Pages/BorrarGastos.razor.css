@@ -244,3 +244,108 @@ body {
         margin-bottom: 25px;
     }
 }
+
+/* --- LISTA DE REGISTROS --- */
+
+.ListaRegistros {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.FilaRegistro {
+    background: linear-gradient(180deg, #f3f6ff 0%, #eef2ff 100%);
+    border: 1px solid #dfe5ff;
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.DatoFila {
+    font-size: 0.95rem;
+    color: #303030;
+}
+
+.NombreCategoriaFila {
+    font-weight: 700;
+    flex: 1;
+}
+
+.MontoFila {
+    color: #3c40ea;
+    font-weight: 700;
+}
+
+.AccionesFila {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.BotonChico {
+    flex: 0 0 auto !important;
+    max-width: none !important;
+    padding: 8px 16px !important;
+    font-size: 0.85rem !important;
+}
+
+/* --- EDICION INLINE --- */
+
+.EdicionFila {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.SelectEdicion {
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #dfe4f3;
+    background-color: #ffffff;
+    font-size: 0.9rem;
+}
+
+.InputEdicion {
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #dfe4f3;
+    background-color: #ffffff;
+    font-size: 0.9rem;
+    width: 120px;
+}
+
+/* --- CONFIRMACION INLINE --- */
+
+.ConfirmarFila {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.TextoConfirmar {
+    font-weight: 600;
+    color: #252b3b;
+    margin-right: auto;
+}
+
+.MensajeExito {
+    color: #1a9e4b;
+    font-weight: 600;
+}
+
+::deep .botonVolver {
+    background-color: transparent;
+    color: #3c40ea;
+    border: 2px solid #3c40ea;
+}
+
+    ::deep .botonVolver:hover {
+        background-color: #3c40ea;
+        color: white;
+    }

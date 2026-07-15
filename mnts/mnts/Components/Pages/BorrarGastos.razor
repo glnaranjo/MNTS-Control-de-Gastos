@@ -13,7 +13,7 @@
             <h2 class="Titulo">Borrar Gastos</h2>
         </div>
 
-        @if (estado == EstadoBorrado.Formulario)
+        @if (estado == EstadoPantalla.Formulario)
         {
             <div class="Seccion">
                 <p class="subtitulo">Ingrese la fecha</p>
@@ -41,14 +41,13 @@
             </div>
 
             <div class="ContenedorBotones">
-                <button class="botones Borrar" @onclick="IniciarConfirmacion">
-                    Borrar
+                <button class="botones Guardar" @onclick="BuscarGastos">
+                    Buscar
                 </button>
             </div>
 
             <div class="Avisos">
-                <p class="subtitulo2">*AVISO: Esto borrará TODOS los gastos del día seleccionado*</p>
-                <p class="subtitulo2">*En caso de no seleccionar día se borrarán TODOS los registros del mes*</p>
+                <p class="subtitulo2">En caso de no seleccionar dia se mostraran todos los registros del mes</p>
             </div>
 
             @if (!string.IsNullOrEmpty(mensajeError))
@@ -56,31 +55,88 @@
                 <p class="subtitulo2 MensajeError">@mensajeError</p>
             }
         }
-        else if (estado == EstadoBorrado.Confirmando)
-        {
-            <div class="Seccion">
-                <p class="subtitulo2">¿Estás seguro?</p>
-            </div>
-
-            <div class="ContenedorBotones">
-                <button class="botones Borrar" @onclick="ConfirmarBorrado">
-                    Sí
-                </button>
-
-                <button class="botones Guardar" @onclick="CancelarConfirmacion">
-                    No
-                </button>
-            </div>
-        }
         else
         {
-            <div class="Seccion">
-                <p class="subtitulo2">@mensajeResultado</p>
-            </div>
+            @if (gastosListado.Count == 0)
+            {
+                <p class="subtitulo2">No hay gastos registrados para esa fecha</p>
+            }
+            else
+            {
+                <div class="ListaRegistros">
+                    @foreach (var gasto in gastosListado)
+                    {
+                        <div class="FilaRegistro">
+
+                            @if (editandoId == gasto.Id)
+                            {
+                                <div class="EdicionFila">
+                                    <select class="SelectEdicion" @bind="categoriaEdicion">
+                                        @foreach (var etiqueta in etiquetas)
+                                        {
+                                            <option value="@etiqueta.Nombre">@etiqueta.Nombre</option>
+                                        }
+                                        @if (!etiquetas.Any(e => e.Nombre == gasto.Categoria))
+                                        {
+                                            <option value="@gasto.Categoria">@gasto.Categoria</option>
+                                        }
+                                    </select>
+
+                                    <input type="text" class="InputEdicion" @bind="montoEdicion" placeholder="Monto" />
+
+                                    <button class="botones Guardar BotonChico" @onclick="() => GuardarEdicion(gasto.Id)">
+                                        Guardar
+                                    </button>
+
+                                    <button class="botones botonVolver BotonChico" @onclick="CancelarEdicion">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            }
+                            else if (eliminandoId == gasto.Id)
+                            {
+                                <div class="ConfirmarFila">
+                                    <span class="TextoConfirmar">¿Eliminar este gasto?</span>
+
+                                    <button class="botones Borrar BotonChico" @onclick="() => ConfirmarEliminar(gasto.Id)">
+                                        Sí
+                                    </button>
+
+                                    <button class="botones botonVolver BotonChico" @onclick="() => eliminandoId = null">
+                                        No
+                                    </button>
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="DatoFila">Día @gasto.Dia</span>
+                                <span class="DatoFila NombreCategoriaFila">@gasto.Categoria</span>
+                                <span class="DatoFila MontoFila">$@gasto.Monto.ToString("N2")</span>
+
+                                <div class="AccionesFila">
+                                    <button class="botones Guardar BotonChico" @onclick="() => IniciarEdicion(gasto)">
+                                        Editar
+                                    </button>
+
+                                    <button class="botones Borrar BotonChico" @onclick="() => eliminandoId = gasto.Id">
+                                        Eliminar
+                                    </button>
+                                </div>
+                            }
+
+                        </div>
+                    }
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(mensajeAccion))
+            {
+                <p class="subtitulo2 MensajeExito">@mensajeAccion</p>
+            }
 
             <div class="ContenedorBotones">
-                <button class="botones Guardar" @onclick="Reiniciar">
-                    Ok
+                <button class="botones botonVolver" @onclick="VolverAlFormulario">
+                    Buscar otra fecha
                 </button>
             </div>
         }
@@ -91,18 +147,32 @@
 
 @code {
 
-    private enum EstadoBorrado { Formulario, Confirmando, Resultado }
+    private enum EstadoPantalla { Formulario, Listado }
 
-    private EstadoBorrado estado = EstadoBorrado.Formulario;
+    private EstadoPantalla estado = EstadoPantalla.Formulario;
 
     private int? dia;
     private int? mes;
     private int? anio;
 
     private string? mensajeError;
-    private string? mensajeResultado;
+    private string? mensajeAccion;
 
-    private void IniciarConfirmacion()
+    private List<mnts.Models.Gasto> gastosListado = new();
+    private List<mnts.Models.Etiqueta> etiquetas = new();
+
+    private int? editandoId;
+    private string? categoriaEdicion;
+    private string? montoEdicion;
+
+    private int? eliminandoId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        etiquetas = await GastosService.ObtenerEtiquetasAsync();
+    }
+
+    private async Task BuscarGastos()
     {
         mensajeError = null;
 
@@ -124,33 +194,74 @@
             return;
         }
 
-        estado = EstadoBorrado.Confirmando;
+        gastosListado = await GastosService.ObtenerGastosPorFechaAsync(dia, mes.Value, anio.Value);
+        estado = EstadoPantalla.Listado;
     }
 
-    private void CancelarConfirmacion()
+    private void IniciarEdicion(mnts.Models.Gasto gasto)
     {
-        estado = EstadoBorrado.Formulario;
+        editandoId = gasto.Id;
+        categoriaEdicion = gasto.Categoria;
+        montoEdicion = gasto.Monto.ToString("0.##");
+        eliminandoId = null;
     }
 
-    private async Task ConfirmarBorrado()
+    private void CancelarEdicion()
     {
-        var borrados = await GastosService.BorrarGastosAsync(dia, mes!.Value, anio!.Value);
-
-        mensajeResultado = borrados == 0
-            ? "No había gastos para borrar en ese rango"
-            : $"Se eliminaron {borrados} gasto(s) correctamente";
-
-        estado = EstadoBorrado.Resultado;
+        editandoId = null;
+        categoriaEdicion = null;
+        montoEdicion = null;
     }
 
-    private void Reiniciar()
+    private async Task GuardarEdicion(int id)
     {
+        if (string.IsNullOrWhiteSpace(categoriaEdicion) ||
+            string.IsNullOrWhiteSpace(montoEdicion) ||
+            !double.TryParse(montoEdicion, out var monto))
+        {
+            mensajeAccion = "Error, revisá los datos ingresados";
+            return;
+        }
+
+        await GastosService.ActualizarGastoAsync(id, categoriaEdicion, monto);
+
+        editandoId = null;
+        gastosListado = await GastosService.ObtenerGastosPorFechaAsync(dia, mes!.Value, anio!.Value);
+
+        mensajeAccion = "Gasto actualizado correctamente";
+        await MostrarMensajeTemporal();
+    }
+
+    private async Task ConfirmarEliminar(int id)
+    {
+        await GastosService.BorrarGastoPorIdAsync(id);
+
+        eliminandoId = null;
+        gastosListado = await GastosService.ObtenerGastosPorFechaAsync(dia, mes!.Value, anio!.Value);
+
+        mensajeAccion = "Gasto eliminado correctamente";
+        await MostrarMensajeTemporal();
+    }
+
+    private async Task MostrarMensajeTemporal()
+    {
+        StateHasChanged();
+        await Task.Delay(1500);
+        mensajeAccion = null;
+        StateHasChanged();
+    }
+
+    private void VolverAlFormulario()
+    {
+        estado = EstadoPantalla.Formulario;
+        gastosListado.Clear();
         dia = null;
         mes = null;
         anio = null;
+        editandoId = null;
+        eliminandoId = null;
         mensajeError = null;
-        mensajeResultado = null;
-        estado = EstadoBorrado.Formulario;
+        mensajeAccion = null;
     }
 
 }

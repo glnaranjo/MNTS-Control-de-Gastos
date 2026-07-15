@@ -136,6 +136,73 @@ public class GastosService
         return resultado;
     }
 
+    // ---------- GASTOS INDIVIDUALES ----------
+
+    public async Task<List<Gasto>> ObtenerGastosPorFechaAsync(int? dia, int mes, int anio)
+    {
+        await InitAsync();
+
+        if (dia is null)
+        {
+            return await _db!.Table<Gasto>()
+                .Where(g => g.Mes == mes && g.Anio == anio)
+                .OrderBy(g => g.Dia)
+                .ToListAsync();
+        }
+
+        return await _db!.Table<Gasto>()
+            .Where(g => g.Dia == dia && g.Mes == mes && g.Anio == anio)
+            .ToListAsync();
+    }
+
+    public async Task ActualizarGastoAsync(int id, string categoria, double monto)
+    {
+        await InitAsync();
+
+        var gasto = await _db!.Table<Gasto>().Where(g => g.Id == id).FirstOrDefaultAsync();
+        if (gasto is not null)
+        {
+            gasto.Categoria = categoria;
+            gasto.Monto = monto;
+            await _db!.UpdateAsync(gasto);
+        }
+    }
+
+    public async Task BorrarGastoPorIdAsync(int id)
+    {
+        await InitAsync();
+        await _db!.DeleteAsync<Gasto>(id);
+    }
+
+    // ---------- INGRESOS INDIVIDUALES ----------
+
+    public async Task<List<Ingreso>> ObtenerIngresosPorFechaAsync(int mes, int anio)
+    {
+        await InitAsync();
+
+        return await _db!.Table<Ingreso>()
+            .Where(i => i.Mes == mes && i.Anio == anio)
+            .ToListAsync();
+    }
+
+    public async Task ActualizarIngresoAsync(int id, double monto)
+    {
+        await InitAsync();
+
+        var ingreso = await _db!.Table<Ingreso>().Where(i => i.Id == id).FirstOrDefaultAsync();
+        if (ingreso is not null)
+        {
+            ingreso.Monto = monto;
+            await _db!.UpdateAsync(ingreso);
+        }
+    }
+
+    public async Task BorrarIngresoPorIdAsync(int id)
+    {
+        await InitAsync();
+        await _db!.DeleteAsync<Ingreso>(id);
+    }
+
     // Ingresos
 
     public async Task InsertarIngresoAsync(int mes, int anio, double monto)
