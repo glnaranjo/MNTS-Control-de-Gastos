@@ -1,4 +1,4 @@
-﻿namespace mnts
+namespace mnts
 {
     public partial class App : Application
     {
@@ -14,11 +14,14 @@
                 Title = "MNTS Control de gastos"
             };
 
-            window.Width = 1500;
-            window.Height = 900;
+#if WINDOWS
+            // Proporción de pantalla móvil para pruebas en escritorio
+            window.Width = 430;
+            window.Height = 880;
 
-            window.MinimumWidth = 1500;
-            window.MinimumHeight = 900;
+            window.MinimumWidth = 360;
+            window.MinimumHeight = 600;
+#endif
 
             return window;
         }

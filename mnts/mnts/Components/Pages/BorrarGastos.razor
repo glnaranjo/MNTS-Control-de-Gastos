@@ -1,125 +1,201 @@
-﻿@page "/BorrarGastos"
+@page "/BorrarGastos"
 @inject mnts.Services.GastosService GastosService
 
-<div class="ContenedorGastosMain">
+<div class="mobile-container borrargastos-container">
 
-    <NavLink href="/" class="BotonVolver">
-        ← Volver
-    </NavLink>
-
-    <div class="ContenedorCentro">
-
-        <div class="Header">
-            <h2 class="Titulo">Borrar Gastos</h2>
-        </div>
-
-        @if (estado == EstadoPantalla.Formulario)
+    <!-- TOPBAR MOBILE -->
+    <header class="mobile-topbar">
+        @if (estado == EstadoPantalla.Listado)
         {
-            <div class="Seccion">
-                <center><p class="subtitulo">Ingrese la fecha</p></center>
-
-                <div class="CamposFecha">
-                    <div class="CampoFecha">
-                        <label class="LabelCampo">Día</label>
-                        <input type="number" min="1" max="31" placeholder="Opcional" class="InputCampo" @bind="dia" />
-                    </div>
-
-                    <span class="SeparadorFecha">/</span>
-
-                    <div class="CampoFecha">
-                        <label class="LabelCampo">Mes</label>
-                        <input type="number" min="1" max="12" placeholder="MM" class="InputCampo" @bind="mes" />
-                    </div>
-
-                    <span class="SeparadorFecha">/</span>
-
-                    <div class="CampoFecha">
-                        <label class="LabelCampo">Año</label>
-                        <input type="number" placeholder="AAAA" class="InputCampo" @bind="anio" />
-                    </div>
-                </div>
-            </div>
-
-            <div class="ContenedorBotones">
-                <button class="botones Guardar" @onclick="BuscarGastos">
-                    Buscar
-                </button>
-            </div>
-
-            <div class="Avisos">
-                <p class="subtitulo2">En caso de no seleccionar dia se mostraran todos los registros del mes</p>
-            </div>
-
-            @if (!string.IsNullOrEmpty(mensajeError))
-            {
-                <p class="subtitulo2 MensajeError">@mensajeError</p>
-            }
+            <button class="mobile-back-button" @onclick="VolverAlFormulario" aria-label="Volver a búsqueda">
+                ‹
+            </button>
         }
         else
         {
+            <NavLink href="/" class="mobile-back-button" aria-label="Volver">
+                ‹
+            </NavLink>
+        }
+        <h1 class="mobile-topbar-title">Gestionar Gastos</h1>
+        <div class="mobile-topbar-spacer"></div>
+    </header>
+
+    @if (!string.IsNullOrEmpty(mensajeError))
+    {
+        <div class="mobile-toast mobile-toast-error">
+            @mensajeError
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(mensajeAccion))
+    {
+        <div class="mobile-toast mobile-toast-success">
+            @mensajeAccion
+        </div>
+    }
+
+    <main class="borrargastos-content">
+
+        @if (estado == EstadoPantalla.Formulario)
+        {
+            <!-- FORMULARIO DE FILTRO -->
+            <section class="card-filtro">
+                <div class="filtro-header">
+                    <span class="filtro-icon">🔍</span>
+                    <span class="filtro-titulo">Buscar gastos por fecha</span>
+                </div>
+                <p class="filtro-sub">Podés filtrar por mes entero o especificar un día particular</p>
+
+                <div class="filtro-campos-grid">
+                    <div class="filtro-campo">
+                        <label class="filtro-label">Día (opcional)</label>
+                        <input type="number"
+                               min="1"
+                               max="31"
+                               inputmode="numeric"
+                               placeholder="Todos"
+                               class="mobile-input"
+                               @bind="dia" />
+                    </div>
+
+                    <div class="filtro-campo">
+                        <label class="filtro-label">Mes</label>
+                        <select class="mobile-input" @bind="mes">
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+
+                    <div class="filtro-campo">
+                        <label class="filtro-label">Año</label>
+                        <input type="number"
+                               inputmode="numeric"
+                               placeholder="AAAA"
+                               class="mobile-input"
+                               @bind="anio" />
+                    </div>
+                </div>
+
+                <button class="mobile-btn mobile-btn-primary btn-buscar-gastos" @onclick="BuscarGastos">
+                    <span>🔍 Buscar Registros</span>
+                </button>
+            </section>
+        }
+        else
+        {
+            <!-- LISTADO DE RESULTADOS -->
+            <div class="listado-cabecera">
+                <span class="listado-conteo">
+                    @gastosListado.Count @(gastosListado.Count == 1 ? "gasto encontrado" : "gastos encontrados")
+                </span>
+                <button class="btn-cambiar-filtro" @onclick="VolverAlFormulario">
+                    Filtros ▾
+                </button>
+            </div>
+
             @if (gastosListado.Count == 0)
             {
-                <p class="subtitulo2">No hay gastos registrados para esa fecha</p>
+                <div class="card-vacio">
+                    <span class="vacio-icon">📭</span>
+                    <p class="vacio-titulo">No hay gastos para esa fecha</p>
+                    <p class="vacio-sub">Probá buscando en otro día o mes.</p>
+                </div>
             }
             else
             {
-                <div class="ListaRegistros">
+                <div class="lista-gastos">
                     @foreach (var gasto in gastosListado)
                     {
-                        <div class="FilaRegistro">
+                        <div class="card-registro">
 
                             @if (editandoId == gasto.Id)
                             {
-                                <div class="EdicionFila">
-                                    <select class="SelectEdicion" @bind="categoriaEdicion">
-                                        @foreach (var etiqueta in etiquetas)
-                                        {
-                                            <option value="@etiqueta.Nombre">@etiqueta.Nombre</option>
-                                        }
-                                        @if (!etiquetas.Any(e => e.Nombre == gasto.Categoria))
-                                        {
-                                            <option value="@gasto.Categoria">@gasto.Categoria</option>
-                                        }
-                                    </select>
+                                <!-- MODO EDICIÓN -->
+                                <div class="edicion-box">
+                                    <span class="edicion-titulo">✏️ Editando gasto del día @gasto.Dia</span>
 
-                                    <input type="text" class="InputEdicion" @bind="montoEdicion" placeholder="Monto" />
+                                    <div class="edicion-campos">
+                                        <div class="campo-edicion-categoria">
+                                            <label class="filtro-label">Categoría</label>
+                                            <select class="mobile-input" @bind="categoriaEdicion">
+                                                @foreach (var etiqueta in etiquetas)
+                                                {
+                                                    <option value="@etiqueta.Nombre">@etiqueta.Icono @etiqueta.Nombre</option>
+                                                }
+                                                @if (!etiquetas.Any(e => e.Nombre == gasto.Categoria))
+                                                {
+                                                    <option value="@gasto.Categoria">@gasto.Categoria</option>
+                                                }
+                                            </select>
+                                        </div>
 
-                                    <button class="botones Guardar BotonChico" @onclick="() => GuardarEdicion(gasto.Id)">
-                                        Guardar
-                                    </button>
+                                        <div class="campo-edicion-monto">
+                                            <label class="filtro-label">Monto ($)</label>
+                                            <input type="text"
+                                                   inputmode="decimal"
+                                                   class="mobile-input"
+                                                   @bind="montoEdicion"
+                                                   placeholder="0.00" />
+                                        </div>
+                                    </div>
 
-                                    <button class="botones botonVolver BotonChico" @onclick="CancelarEdicion">
-                                        Cancelar
-                                    </button>
+                                    <div class="edicion-acciones">
+                                        <button class="mobile-btn mobile-btn-primary btn-chico" @onclick="() => GuardarEdicion(gasto.Id)">
+                                            Guardar
+                                        </button>
+                                        <button class="mobile-btn mobile-btn-secondary btn-chico" @onclick="CancelarEdicion">
+                                            Cancelar
+                                        </button>
+                                    </div>
                                 </div>
                             }
                             else if (eliminandoId == gasto.Id)
                             {
-                                <div class="ConfirmarFila">
-                                    <span class="TextoConfirmar">¿Eliminar este gasto?</span>
-
-                                    <button class="botones Borrar BotonChico" @onclick="() => ConfirmarEliminar(gasto.Id)">
-                                        Sí
-                                    </button>
-
-                                    <button class="botones botonVolver BotonChico" @onclick="() => eliminandoId = null">
-                                        No
-                                    </button>
+                                <!-- MODO CONFIRMACIÓN ELIMINAR -->
+                                <div class="confirmar-box">
+                                    <span class="confirmar-titulo">¿Eliminar este gasto de $@gasto.Monto.ToString("N2")?</span>
+                                    <div class="confirmar-acciones">
+                                        <button class="mobile-btn mobile-btn-danger btn-chico" @onclick="() => ConfirmarEliminar(gasto.Id)">
+                                            Sí, eliminar
+                                        </button>
+                                        <button class="mobile-btn mobile-btn-secondary btn-chico" @onclick="() => eliminandoId = null">
+                                            Cancelar
+                                        </button>
+                                    </div>
                                 </div>
                             }
                             else
                             {
-                                <span class="DatoFila">Día @gasto.Dia</span>
-                                <span class="DatoFila NombreCategoriaFila">@gasto.Categoria</span>
-                                <span class="DatoFila MontoFila">$@gasto.Monto.ToString("N2")</span>
+                                <!-- VISTA NORMAL REGISTRO -->
+                                <div class="registro-fila-info">
+                                    <div class="registro-badge-fecha">
+                                        <span class="badge-dia">Día @gasto.Dia</span>
+                                        <span class="badge-mes">@gasto.Mes/@gasto.Anio</span>
+                                    </div>
 
-                                <div class="AccionesFila">
-                                    <button class="botones Guardar BotonChico" @onclick="() => IniciarEdicion(gasto)">
-                                        Editar
+                                    <div class="registro-detalle">
+                                        <span class="registro-categoria">@gasto.Categoria</span>
+                                        <span class="registro-monto">-$@gasto.Monto.ToString("N2")</span>
+                                    </div>
+                                </div>
+
+                                <div class="registro-acciones">
+                                    <button class="btn-accion-icono btn-accion-editar" @onclick="() => IniciarEdicion(gasto)" title="Editar">
+                                        ✏️
                                     </button>
-
-                                    <button class="botones Borrar BotonChico" @onclick="() => eliminandoId = gasto.Id">
-                                        Eliminar
+                                    <button class="btn-accion-icono btn-accion-borrar" @onclick="() => eliminandoId = gasto.Id" title="Eliminar">
+                                        🗑️
                                     </button>
                                 </div>
                             }
@@ -128,20 +204,9 @@
                     }
                 </div>
             }
-
-            @if (!string.IsNullOrEmpty(mensajeAccion))
-            {
-                <p class="subtitulo2 MensajeExito">@mensajeAccion</p>
-            }
-
-            <div class="ContenedorBotones">
-                <button class="botones botonVolver" @onclick="VolverAlFormulario">
-                    Buscar otra fecha
-                </button>
-            </div>
         }
 
-    </div>
+    </main>
 
 </div>
 
@@ -152,8 +217,8 @@
     private EstadoPantalla estado = EstadoPantalla.Formulario;
 
     private int? dia;
-    private int? mes;
-    private int? anio;
+    private int? mes = DateTime.Today.Month;
+    private int? anio = DateTime.Today.Year;
 
     private string? mensajeError;
     private string? mensajeAccion;
@@ -178,19 +243,19 @@
 
         if (mes is null || mes < 1 || mes > 12)
         {
-            mensajeError = "Error, ingrese un mes válido (1-12)";
+            mensajeError = "Por favor seleccioná un mes válido (1-12)";
             return;
         }
 
         if (anio is null || anio < 2000)
         {
-            mensajeError = "Error, ingrese un año válido";
+            mensajeError = "Por favor ingresá un año válido";
             return;
         }
 
         if (dia is not null && (dia < 1 || dia > 31))
         {
-            mensajeError = "Error, ingrese un día válido (1-31)";
+            mensajeError = "El día debe estar entre 1 y 31";
             return;
         }
 
@@ -217,9 +282,10 @@
     {
         if (string.IsNullOrWhiteSpace(categoriaEdicion) ||
             string.IsNullOrWhiteSpace(montoEdicion) ||
-            !double.TryParse(montoEdicion, out var monto))
+            !double.TryParse(montoEdicion.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var monto) ||
+            monto <= 0)
         {
-            mensajeAccion = "Error, revisá los datos ingresados";
+            mensajeAccion = "Error: revisá los datos ingresados";
             return;
         }
 
@@ -246,7 +312,7 @@
     private async Task MostrarMensajeTemporal()
     {
         StateHasChanged();
-        await Task.Delay(1500);
+        await Task.Delay(2000);
         mensajeAccion = null;
         StateHasChanged();
     }
@@ -254,10 +320,6 @@
     private void VolverAlFormulario()
     {
         estado = EstadoPantalla.Formulario;
-        gastosListado.Clear();
-        dia = null;
-        mes = null;
-        anio = null;
         editandoId = null;
         eliminandoId = null;
         mensajeError = null;

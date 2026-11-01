@@ -1,52 +1,77 @@
-﻿@page "/EditarEtiquetas"
+@page "/EditarEtiquetas"
 @inject mnts.Services.GastosService GastosService
 
-<div class="ContenedorGastosMain">
+<div class="mobile-container editaretiquetas-container">
 
-    <NavLink href="/" class="BotonVolver">
-        ← Volver
-    </NavLink>
+    <!-- TOPBAR MOBILE -->
+    <header class="mobile-topbar">
+        <NavLink href="/" class="mobile-back-button" aria-label="Volver">
+            ‹
+        </NavLink>
+        <h1 class="mobile-topbar-title">Editar Categorías</h1>
+        <div class="mobile-topbar-spacer"></div>
+    </header>
 
-    <div class="ContenedorCentro">
-
-        <div class="Header">
-            <h2 class="Titulo">Editar Categorías</h2>
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="mobile-toast @(esError ? "mobile-toast-error" : "mobile-toast-success")">
+            @mensaje
         </div>
+    }
 
-        <div class="Seccion">
-            <center><p class="subtitulo">Personalizá el nombre de tus categorías</p></center>
+    <main class="editaretiquetas-content">
 
-            <div class="Etiquetas">
-                @foreach (var etiqueta in etiquetas)
-                {
-                    <div class="CardGasto">
-                        <div class="FilaEditorEtiqueta">
-                            <select class="SelectIcono" @bind="etiqueta.Icono">
-                                @foreach (var opcion in OpcionesIconos)
-                                {
-                                    <option value="@opcion">@opcion</option>
-                                }
-                            </select>
-
-                            <input type="text" @bind="etiqueta.Nombre" @bind:event="oninput" maxlength="20" />
-                        </div>
-                    </div>
-                }
+        <div class="etiquetas-cabecera">
+            <span class="cabecera-icon">🎨</span>
+            <div class="cabecera-textos">
+                <span class="cabecera-titulo">Personalizá tus categorías</span>
+                <span class="cabecera-sub">Elegí el emoji y el nombre representativo para cada gasto</span>
             </div>
         </div>
 
-        <div class="ContenedorBotones">
-            <button class="botones Guardar" @onclick="GuardarCambios">
-                Guardar
+        <div class="lista-editor-etiquetas">
+            @foreach (var etiqueta in etiquetas)
+            {
+                <div class="card-editor-etiqueta">
+                    <div class="selector-icono-box">
+                        <select class="select-emoji" @bind="etiqueta.Icono">
+                            @foreach (var opcion in OpcionesIconos)
+                            {
+                                <option value="@opcion">@opcion</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="input-nombre-box">
+                        <input type="text"
+                               class="mobile-input input-nombre-etiqueta"
+                               placeholder="Nombre de categoría"
+                               maxlength="20"
+                               @bind="etiqueta.Nombre"
+                               @bind:event="oninput" />
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="card-restaurar">
+            <div class="restaurar-info">
+                <span class="restaurar-titulo">¿Querés volver al inicio?</span>
+                <span class="restaurar-sub">Podés restablecer los nombres e íconos originales de fábrica</span>
+            </div>
+            <button class="mobile-btn mobile-btn-secondary btn-restaurar" @onclick="RestaurarValoresDefecto">
+                Restaurar por defecto
             </button>
         </div>
 
-        @if (!string.IsNullOrEmpty(mensaje))
-        {
-            <p class="subtitulo2">@mensaje</p>
-        }
+    </main>
 
-    </div>
+    <!-- BARRA STICKY INFERIOR -->
+    <footer class="mobile-sticky-bottom">
+        <button class="mobile-btn mobile-btn-primary" @onclick="GuardarCambios">
+            <span>💾 Guardar Cambios</span>
+        </button>
+    </footer>
 
 </div>
 
@@ -54,6 +79,7 @@
 
     private List<mnts.Models.Etiqueta> etiquetas = new();
     private string? mensaje;
+    private bool esError = false;
 
     private static readonly string[] OpcionesIconos =
     {
@@ -73,7 +99,8 @@
         {
             if (string.IsNullOrWhiteSpace(etiqueta.Nombre))
             {
-                mensaje = "Ningún nombre puede quedar vacío";
+                mensaje = "Ningún nombre de categoría puede quedar vacío";
+                esError = true;
                 return;
             }
         }
@@ -83,14 +110,24 @@
             await GastosService.ActualizarEtiquetaAsync(etiqueta.Id, etiqueta.Nombre.Trim(), etiqueta.Icono);
         }
 
-        mensaje = "Categorías actualizadas correctamente";
+        mensaje = "¡Categorías actualizadas correctamente!";
+        esError = false;
+        await MostrarMensajeTemporal();
+    }
+
+    private async Task RestaurarValoresDefecto()
+    {
+        await GastosService.RestaurarEtiquetasAsync();
+        etiquetas = await GastosService.ObtenerEtiquetasAsync();
+        mensaje = "Categorías restauradas a valores por defecto";
+        esError = false;
         await MostrarMensajeTemporal();
     }
 
     private async Task MostrarMensajeTemporal()
     {
         StateHasChanged();
-        await Task.Delay(1500);
+        await Task.Delay(2000);
         mensaje = null;
         StateHasChanged();
     }

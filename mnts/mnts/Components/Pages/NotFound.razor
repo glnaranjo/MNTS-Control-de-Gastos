@@ -1,5 +1,11 @@
-﻿@page "/not-found"
+@page "/not-found"
 @layout MainLayout
 
-<h3>Not Found</h3>
-<p>Sorry, the content you are looking for does not exist.</p>
+<div class="mobile-container" style="justify-content: center; align-items: center; text-align: center; padding: 30px;">
+    <span style="font-size: 3rem; margin-bottom: 12px;">🧭</span>
+    <h2 style="font-weight: 800; margin-bottom: 6px;">Página no encontrada</h2>
+    <p style="color: var(--app-text-muted); margin-bottom: 24px;">La sección a la que intentás acceder no existe o fue movida.</p>
+    <NavLink href="/" class="mobile-btn mobile-btn-primary" style="max-width: 200px;">
+        Volver al inicio
+    </NavLink>
+</div>

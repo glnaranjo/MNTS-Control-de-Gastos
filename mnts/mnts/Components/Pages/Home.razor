@@ -1,129 +1,145 @@
-﻿@page "/"
+@page "/"
 @inject mnts.Services.GastosService GastosService
 
-<div class="contenedor-main">
+<div class="mobile-container home-container">
 
-    <div class="menu-imagenDeco">
-        <img src="./images/fondo.png" />
-    </div>
+    <div class="home-main">
 
-    <div class="menu-inicio">
-
-        <div>
+        <!-- LOGO Y TÍTULO MNTS -->
+        <div class="home-header">
             @if (!mostrarOpciones)
             {
-                <img src="./images/logo.png" class="logoPrinc" />
+                <img src="./images/logo.png" class="home-logo" alt="MNTS Logo" />
             }
 
-            <p class="textoLogo">
+            <p class="home-texto-logo">
                 @(mostrarOpciones ? "Opciones" : "Control de gastos")
             </p>
         </div>
 
         @if (!mostrarOpciones)
         {
+            <!-- BOTONES PRINCIPALES MODERNOS -->
             <div class="contenedor-botones">
 
-                <NavLink href="/Gastos" class="botones">
-                    Ingresar gastos
+                <NavLink href="/Gastos" class="boton-mnts">
+                    <span class="btn-icono">💸</span>
+                    <span class="btn-texto">Ingresar gastos</span>
                 </NavLink>
 
-                <NavLink href="/Resumen" class="botones">
-                    Ver resumen mensual
+                <NavLink href="/Resumen" class="boton-mnts">
+                    <span class="btn-icono">📊</span>
+                    <span class="btn-texto">Ver resumen mensual</span>
                 </NavLink>
 
-                <NavLink href="/Ingresos" class="botones">
-                    Añadir ingresos
+                <NavLink href="/Ingresos" class="boton-mnts">
+                    <span class="btn-icono">💰</span>
+                    <span class="btn-texto">Añadir ingresos</span>
                 </NavLink>
 
-                <button class="botones" @onclick="() => mostrarOpciones = true">
-                    Opciones
+                <button class="boton-mnts" @onclick="() => mostrarOpciones = true">
+                    <span class="btn-icono">⚙️</span>
+                    <span class="btn-texto">Opciones</span>
                 </button>
 
-                <button class="botones botonSalir" @onclick="CerrarApp">
-                    Salir
+                <button class="boton-mnts boton-salir" @onclick="CerrarApp">
+                    <span class="btn-icono">🚪</span>
+                    <span class="btn-texto">Salir</span>
                 </button>
 
             </div>
         }
         else
         {
+            <!-- SUBSECCIONES DE OPCIONES (MODERNAS) -->
             <div class="contenedor-botones">
 
-                <NavLink href="/BorrarGastos" class="botones">
-                    Borrar gastos
+                <NavLink href="/BorrarGastos" class="boton-mnts">
+                    <span class="btn-icono">🗑️</span>
+                    <span class="btn-texto">Borrar gastos</span>
                 </NavLink>
 
-                <NavLink href="/BorrarPresupuesto" class="botones">
-                    Borrar presupuesto/ingresos
+                <NavLink href="/BorrarPresupuesto" class="boton-mnts">
+                    <span class="btn-icono">💵</span>
+                    <span class="btn-texto">Borrar presupuesto/ingresos</span>
                 </NavLink>
 
-                <NavLink href="/EditarEtiquetas" class="botones">
-                    Editar categorías
+                <NavLink href="/EditarEtiquetas" class="boton-mnts">
+                    <span class="btn-icono">🏷️</span>
+                    <span class="btn-texto">Editar categorías</span>
                 </NavLink>
 
-                <button class="botones" @onclick="AbrirManualDeUso">
-                    Manual de uso
+                <button class="boton-mnts" @onclick="AbrirManualDeUso">
+                    <span class="btn-icono">📖</span>
+                    <span class="btn-texto">Manual de uso</span>
                 </button>
 
-                <NavLink href="/SobreNosotros" class="botones">
-                    Sobre nosotros
+                <NavLink href="/SobreNosotros" class="boton-mnts">
+                    <span class="btn-icono">ℹ️</span>
+                    <span class="btn-texto">Sobre nosotros</span>
                 </NavLink>
 
-                <button class="botones botonPeligro" @onclick="AbrirModalReinicio">
-                    Reiniciar Datos
+                <button class="boton-mnts boton-peligro" @onclick="AbrirModalReinicio">
+                    <span class="btn-icono">⚠️</span>
+                    <span class="btn-texto">Reiniciar Datos</span>
                 </button>
 
-                <button class="botones botonVolver" @onclick="() => mostrarOpciones = false">
-                    Volver
+                <button class="boton-mnts boton-volver" @onclick="() => mostrarOpciones = false">
+                    <span class="btn-icono">↩️</span>
+                    <span class="btn-texto">Volver</span>
                 </button>
 
                 @if (!string.IsNullOrEmpty(errorManual))
                 {
-                    <p style="color: red; text-align: center;">@errorManual</p>
+                    <div class="mobile-toast mobile-toast-error">
+                        @errorManual
+                    </div>
                 }
 
             </div>
         }
 
     </div>
+
 </div>
 
 @if (mostrarModalReinicio)
 {
-    <div class="ModalOverlay">
-        <div class="ModalContenido">
+    <div class="modal-backdrop" @onclick="CerrarModalReinicio">
+        <div class="modal-card" @onclick:stopPropagation="true">
+            <h3 class="modal-titulo">¿Estás seguro?</h3>
 
-            <h3 class="ModalTitulo">¿Estás seguro?</h3>
-
-            <p class="ModalTexto">
-                Esta acción eliminará <strong>TODOS</strong> los gastos e ingresos registrados,
-                de forma permanente. No se puede deshacer.
+            <p class="modal-desc">
+                Esta acción eliminará <strong>TODOS</strong> los gastos e ingresos registrados, y restablecerá los nombres de las etiquetas a sus valores por defecto. Esta acción <strong>NO se puede deshacer</strong>.
             </p>
 
-            <p class="ModalTexto">
-                Para confirmar, escribe exactamente la siguiente frase:
-            </p>
-
-            <p class="ModalFrase">Deseo eliminar todos mis datos</p>
-
-            <input type="text" class="ModalInput" @bind="textoConfirmacion" @bind:event="oninput" placeholder="Escribe la frase aquí" />
+            <div class="modal-input-group">
+                <label class="modal-input-label">
+                    Para confirmar, escribí:<br />
+                    <code>Deseo eliminar todos mis datos</code>
+                </label>
+                <input type="text"
+                       class="mobile-input modal-input-field"
+                       placeholder="Deseo eliminar todos mis datos"
+                       @bind="textoConfirmacion"
+                       autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off" />
+            </div>
 
             @if (!string.IsNullOrEmpty(mensajeModal))
             {
-                <p class="ModalMensaje">@mensajeModal</p>
+                <p class="modal-error">@mensajeModal</p>
             }
 
-            <div class="ModalBotones">
-                <button class="botones botonPeligro" @onclick="ConfirmarReinicio">
-                    Confirmar
+            <div class="modal-acciones">
+                <button class="boton-mnts boton-peligro" @onclick="ConfirmarReinicio">
+                    Confirmar Reinicio
                 </button>
-
-                <button class="botones botonVolver" @onclick="CerrarModalReinicio">
+                <button class="boton-mnts boton-volver" @onclick="CerrarModalReinicio">
                     Cancelar
                 </button>
             </div>
-
         </div>
     </div>
 }
@@ -175,22 +191,67 @@
 
     private async Task AbrirManualDeUso()
     {
+        errorManual = null;
         try
         {
-            var rutaDestino = Path.Combine(FileSystem.CacheDirectory, "Manual De Uso.pdf");
+            var nombreArchivo = "Manual de uso.pdf";
+            var rutaDestino = Path.Combine(FileSystem.CacheDirectory, nombreArchivo);
 
-            using var streamOrigen = await FileSystem.OpenAppPackageFileAsync("Manual De Uso.pdf");
-            using var streamDestino = File.Create(rutaDestino);
-            await streamOrigen.CopyToAsync(streamDestino);
-
-            await Launcher.Default.OpenAsync(new OpenFileRequest
+            if (!File.Exists(rutaDestino) || new FileInfo(rutaDestino).Length == 0)
             {
+                Stream? streamOrigen = null;
+                try
+                {
+                    // En Android es case-sensitive (el archivo físico en Resources/Raw es 'Manual de uso.pdf')
+                    streamOrigen = await FileSystem.OpenAppPackageFileAsync("Manual de uso.pdf");
+                }
+                catch
+                {
+                    // Fallback
+                    streamOrigen = await FileSystem.OpenAppPackageFileAsync("Manual De Uso.pdf");
+                }
+
+                using (streamOrigen)
+                using (var streamDestino = File.Create(rutaDestino))
+                {
+                    await streamOrigen.CopyToAsync(streamDestino);
+                }
+            }
+
+            // Intentamos abrir con Launcher y si no con Share para máxima compatibilidad
+            var abrio = await Launcher.Default.OpenAsync(new OpenFileRequest
+            {
+                Title = "Manual de uso MNTS",
                 File = new ReadOnlyFile(rutaDestino)
             });
+
+            if (!abrio)
+            {
+                await Share.Default.RequestAsync(new ShareFileRequest
+                {
+                    Title = "Abrir Manual de uso",
+                    File = new ShareFile(rutaDestino)
+                });
+            }
         }
         catch (Exception ex)
         {
-            errorManual = ex.Message;
+            try
+            {
+                var ruta = Path.Combine(FileSystem.CacheDirectory, "Manual de uso.pdf");
+                if (File.Exists(ruta))
+                {
+                    await Share.Default.RequestAsync(new ShareFileRequest
+                    {
+                        Title = "Abrir Manual de uso",
+                        File = new ShareFile(ruta)
+                    });
+                    return;
+                }
+            }
+            catch { }
+
+            errorManual = $"Error al abrir manual: {ex.Message}";
         }
     }
 

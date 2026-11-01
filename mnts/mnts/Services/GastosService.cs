@@ -1,4 +1,4 @@
-﻿using mnts.Models;
+using mnts.Models;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -284,7 +284,7 @@ public class GastosService
 
         foreach (var etiquetaDefault in ObtenerEtiquetasPorDefecto())
         {
-            await _db!.UpdateAsync(etiquetaDefault);
+            await _db!.InsertOrReplaceAsync(etiquetaDefault);
         }
     }
 }

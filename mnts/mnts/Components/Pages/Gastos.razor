@@ -1,63 +1,81 @@
-﻿@page "/Gastos"
+@page "/Gastos"
 @inject mnts.Services.GastosService GastosService
 
-<div class="ContenedorGastosMain">
+<div class="mobile-container gastos-container">
 
-    <NavLink href="/" class="BotonVolver">
-        ← Volver
-    </NavLink>
+    <!-- TOPBAR MOBILE -->
+    <header class="mobile-topbar">
+        <NavLink href="/" class="mobile-back-button" aria-label="Volver">
+            ‹
+        </NavLink>
+        <h1 class="mobile-topbar-title">Registrar Gastos</h1>
+        <div class="mobile-topbar-spacer"></div>
+    </header>
 
-    <div class="ContenedorCentro">
-
-        <div class="Header">
-            <h2 class="Titulo">Registro de Gastos</h2>
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="mobile-toast @(esError ? "mobile-toast-error" : "mobile-toast-success")">
+            @mensaje
         </div>
+    }
 
-        <div class="Seccion">
-            <p class="subtitulo">Fecha</p>
-            <input type="date" class="InputFecha" @bind="fecha" />
-        </div>
+    <main class="gastos-content">
 
-        <div class="Seccion">
-            <p class="subtitulo">Ingrese sus gastos</p>
+        <!-- FECHA -->
+        <section class="card-seccion">
+            <div class="seccion-header">
+                <span class="seccion-icon">📅</span>
+                <span class="seccion-titulo">Fecha del gasto</span>
+            </div>
+            <div class="input-fecha-wrapper">
+                <input type="date" class="mobile-input input-fecha" @bind="fecha" />
+            </div>
+        </section>
 
-            <div class="Etiquetas">
+        <!-- CATEGORÍAS -->
+        <section class="seccion-categorias">
+            <div class="seccion-header">
+                <span class="seccion-icon">🏷️</span>
+                <span class="seccion-titulo">Monto por categoría</span>
+            </div>
+            <p class="seccion-hint">Ingresá el importe en las categorías que correspondan</p>
+
+            <div class="etiquetas-grid">
                 @foreach (var etiqueta in etiquetas)
                 {
-                    <div class="CardGasto">
-                        <p class="Etiqueta">@etiqueta.Icono @etiqueta.Nombre</p>
-                        <input type="text" placeholder="Ej: 12000"
-                               value="@ObtenerValor(etiqueta.Id)"
-                               @oninput="e => ActualizarValor(etiqueta.Id, e.Value?.ToString())" />
+                    var tieneValor = !string.IsNullOrWhiteSpace(ObtenerValor(etiqueta.Id));
+
+                    <div class="card-gasto @(tieneValor ? "card-gasto-activo" : "")">
+                        <div class="card-gasto-header">
+                            <span class="card-gasto-icono">@etiqueta.Icono</span>
+                            <span class="card-gasto-nombre">@etiqueta.Nombre</span>
+                        </div>
+                        <div class="card-gasto-input-wrapper">
+                            <span class="moneda-signo">$</span>
+                            <input type="text"
+                                   inputmode="decimal"
+                                   pattern="[0-9]*"
+                                   placeholder="0"
+                                   class="card-gasto-input"
+                                   value="@ObtenerValor(etiqueta.Id)"
+                                   @oninput="e => ActualizarValor(etiqueta.Id, e.Value?.ToString())" />
+                        </div>
                     </div>
                 }
             </div>
-        </div>
+        </section>
 
-        <div class="ContenedorBotones">
+    </main>
 
-            <button class="botones Guardar" @onclick="GuardarGastos">
-                Guardar
-            </button>
-
-            <button class="botones Borrar" @onclick="() => LimpiarCampos()">
-                Borrar
-            </button>
-
-        </div>
-
-        @if (!string.IsNullOrEmpty(mensaje))
-        {
-            <p class="subtitulo2">@mensaje</p>
-        }
-        else
-        {
-            <p class="subtitulo2">
-                Las etiquetas se pueden modificar desde el menú de opciones
-            </p>
-        }
-
-    </div>
+    <!-- BARRA FLOTANTE INFERIOR -->
+    <footer class="mobile-sticky-bottom">
+        <button class="mobile-btn mobile-btn-primary btn-guardar" @onclick="GuardarGastos">
+            <span>💾 Guardar Gastos</span>
+        </button>
+        <button class="mobile-btn mobile-btn-secondary btn-limpiar" @onclick="LimpiarCampos" title="Limpiar campos">
+            <span>X</span>
+        </button>
+    </footer>
 
 </div>
 
@@ -65,8 +83,9 @@
 
     private List<mnts.Models.Etiqueta> etiquetas = new();
     private Dictionary<int, string?> valores = new();
-    private DateOnly? fecha;
+    private DateOnly? fecha = DateOnly.FromDateTime(DateTime.Today);
     private string? mensaje;
+    private bool esError = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -85,7 +104,8 @@
     {
         if (fecha is null)
         {
-            mensaje = "Error, seleccione una fecha válida";
+            mensaje = "Error: seleccioná una fecha válida";
+            esError = true;
             await MostrarMensajeTemporal();
             return;
         }
@@ -96,41 +116,46 @@
         {
             if (valores.TryGetValue(etiqueta.Id, out var valor) &&
                 !string.IsNullOrWhiteSpace(valor) &&
-                double.TryParse(valor, out var monto))
+                double.TryParse(valor.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var monto) &&
+                monto > 0)
             {
-                await GastosService.InsertarGastoAsync(fecha.Value.Day, fecha.Value.Month, fecha.Value.Year, etiqueta.Nombre, monto);
+                await GastosService.InsertarGastoAsync(
+                    fecha.Value.Day,
+                    fecha.Value.Month,
+                    fecha.Value.Year,
+                    etiqueta.Nombre,
+                    monto
+                );
                 seGuardoAlgo = true;
             }
         }
 
-        mensaje = seGuardoAlgo
-            ? "Gastos guardados correctamente"
-            : "Ingrese al menos un gasto";
-
-        if (seGuardoAlgo)
+        if (!seGuardoAlgo)
         {
-            LimpiarCampos(borrarMensaje: false);
+            mensaje = "Ingresá al menos un monto para guardar";
+            esError = true;
+            await MostrarMensajeTemporal();
+            return;
         }
 
+        mensaje = "¡Gastos guardados correctamente!";
+        esError = false;
+        LimpiarCampos();
+
         await MostrarMensajeTemporal();
+    }
+
+    private void LimpiarCampos()
+    {
+        valores.Clear();
     }
 
     private async Task MostrarMensajeTemporal()
     {
         StateHasChanged();
-        await Task.Delay(1500);
+        await Task.Delay(2500);
         mensaje = null;
         StateHasChanged();
-    }
-
-    private void LimpiarCampos(bool borrarMensaje = true)
-    {
-        valores.Clear();
-
-        if (borrarMensaje)
-        {
-            mensaje = null;
-        }
     }
 
 }

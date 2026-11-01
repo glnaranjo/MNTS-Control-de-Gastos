@@ -1,46 +1,66 @@
-﻿@page "/SobreNosotros"
+@page "/SobreNosotros"
 
-<div class="ContenedorSobreNosotrosMain">
+<div class="mobile-container sobrenosotros-container">
 
-    <NavLink href="/" class="BotonVolver">
-        ← Volver
-    </NavLink>
+    <!-- TOPBAR MOBILE -->
+    <header class="mobile-topbar">
+        <NavLink href="/" class="mobile-back-button" aria-label="Volver">
+            ‹
+        </NavLink>
+        <h1 class="mobile-topbar-title">Sobre Nosotros</h1>
+        <div class="mobile-topbar-spacer"></div>
+    </header>
 
-    <div class="ContenedorCentro">
+    <main class="sobrenosotros-content">
 
-        <div class="Encabezado">
-            <img src="./images/logo.png" class="LogoMNTS" alt="MNTS" />
+        <!-- LOGOS CARD -->
+        <section class="card-identidad">
+            <div class="logos-fila">
+                <img src="./images/logo.png" class="logo-mnts" alt="MNTS" />
+                <span class="texto-by">by</span>
+                <img src="./images/logo-gnand.png" class="logo-gnand" alt="G-NAND" />
+            </div>
 
-            <span class="TextoBy">by</span>
+            <h2 class="app-nombre">MNTS: Control de Gastos</h2>
+            <div class="version-badge">Versión 2.0 • Edición Mobile</div>
+        </section>
 
-            <img src="./images/logo-gnand.png" class="LogoGNAND" alt="G-NAND" />
-        </div>
+        <!-- DESCRIPCIÓN -->
+        <section class="card-info">
+            <div class="info-item">
+                <span class="info-icon">🇦🇷</span>
+                <div class="info-texto">
+                    <span class="info-titulo">Desarrollo Argentino</span>
+                    <p class="info-desc">
+                        MNTS es una aplicación desarrollada por la iniciativa G-NAND con el objetivo de brindar software gratuito, intuitivo y accesible para ayudar a las personas en su economía diaria.
+                    </p>
+                </div>
+            </div>
 
-        <div class="Descripcion">
-            <p>
-                MNTS: Control de gastos es una app argentina desarrollada por la iniciativa G-NAND con
-                el objetivo de proveer a los usuarios software gratuito que pueda ayudar en su día a día.
-            </p>
-            <p>
-                Al estar en su primera versión, se solicita a los usuarios que cualquier error sea
-                reportado al correo de contacto, para así poder mejorarlo en futuras actualizaciones.
-            </p>
-        </div>
+            <div class="info-separador"></div>
 
-        <div class="Separador"></div>
+            <div class="info-item">
+                <span class="info-icon">🔒</span>
+                <div class="info-texto">
+                    <span class="info-titulo">Privacidad 100% Local</span>
+                    <p class="info-desc">
+                        Tus registros de gastos e ingresos se guardan únicamente de forma local en tu dispositivo. Ningún dato viaja a servidores externos ni se comparte con terceros.
+                    </p>
+                </div>
+            </div>
+        </section>
 
-        <div class="Contacto">
-            <a href="mailto:gnandcontact@gmail.com" class="EnlaceContacto">
-                ✉️ gnandcontact@gmail.com
+        <!-- CONTACTO -->
+        <section class="card-contacto">
+            <span class="contacto-titulo">¿Encontraste un error o tenés una sugerencia?</span>
+            <p class="contacto-sub">Tu feedback es esencial para seguir mejorando la app</p>
+
+            <a href="mailto:gnandcontact@gmail.com" class="mobile-btn mobile-btn-primary btn-contacto">
+                <span>✉️ Contactar a Soporte</span>
             </a>
-        </div>
+            <span class="email-texto">gnandcontact@gmail.com</span>
+        </section>
 
-        <p class="AvisoPrivacidad">
-            Tus datos se guardan de forma local en tu dispositivo, MNTS no los recopila ni los comparte
-        </p>
-
-        <p class="Version">Versión 0.1</p>
-
-    </div>
+    </main>
 
 </div>

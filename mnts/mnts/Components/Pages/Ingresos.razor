@@ -1,73 +1,94 @@
-﻿@page "/Ingresos"
+@page "/Ingresos"
 @inject mnts.Services.GastosService GastosService
 
-<div class="ContenedorGastosMain">
+<div class="mobile-container ingresos-container">
 
-    <NavLink href="/" class="BotonVolver">
-        ← Volver
-    </NavLink>
+    <!-- TOPBAR MOBILE -->
+    <header class="mobile-topbar">
+        <NavLink href="/" class="mobile-back-button" aria-label="Volver">
+            ‹
+        </NavLink>
+        <h1 class="mobile-topbar-title">Añadir Ingresos</h1>
+        <div class="mobile-topbar-spacer"></div>
+    </header>
 
-    <div class="ContenedorCentro">
-
-        <div class="Header">
-            <h2 class="Titulo">Añadir Ingresos</h2>
-            <p class="Descripcion">Presupuesto mensual</p>
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="mobile-toast @(esError ? "mobile-toast-error" : "mobile-toast-success")">
+            @mensaje
         </div>
+    }
 
-        <div class="Seccion">
-            <p class="subtitulo">Ingrese la fecha</p>
-            <input type="date" class="InputFecha" @bind="fecha" />
-        </div>
+    <main class="ingresos-content">
 
-        <div class="Seccion">
-            <p class="subtitulo">¿Qué cantidad desea añadir?</p>
-
-            <div class="CantidadWrapper">
-                <input type="text" placeholder="Ej: 50000" class="InputCantidad" @bind="cantidad" />
-                <span class="SimboloMoneda">$</span>
+        <!-- MONTO HERO -->
+        <section class="card-monto-hero">
+            <span class="monto-hero-label">Monto del ingreso / presupuesto</span>
+            <div class="monto-hero-input-group">
+                <span class="monto-hero-simbolo">$</span>
+                <input type="text"
+                       inputmode="decimal"
+                       pattern="[0-9]*"
+                       placeholder="0"
+                       class="monto-hero-input"
+                       @bind="cantidad"
+                       autofocus />
             </div>
-        </div>
+            <p class="monto-hero-hint">Ingresá el sueldo, adelanto o presupuesto del mes</p>
+        </section>
 
-        <div class="ContenedorBotones">
-            <button class="botones Guardar" @onclick="GuardarIngreso">
-                Enviar
-            </button>
-        </div>
+        <!-- FECHA DEL INGRESO -->
+        <section class="card-seccion">
+            <div class="seccion-header">
+                <span class="seccion-icon">📅</span>
+                <span class="seccion-titulo">Mes y fecha de aplicación</span>
+            </div>
+            <p class="seccion-desc">El ingreso se computará en el mes correspondiente a esta fecha</p>
+            <input type="date" class="mobile-input input-fecha" @bind="fecha" />
+        </section>
 
-        @if (!string.IsNullOrEmpty(mensaje))
-        {
-            <p class="subtitulo2">@mensaje</p>
-        }
+    </main>
 
-    </div>
+    <!-- BOTÓN GUARDAR STICKY -->
+    <footer class="mobile-sticky-bottom">
+        <button class="mobile-btn mobile-btn-primary" @onclick="GuardarIngreso">
+            <span>💾 Guardar Ingreso</span>
+        </button>
+    </footer>
 
 </div>
 
 @code {
 
-    private DateOnly? fecha;
+    private DateOnly? fecha = DateOnly.FromDateTime(DateTime.Today);
     private string? cantidad;
     private string? mensaje;
+    private bool esError = false;
 
     private async Task GuardarIngreso()
     {
         if (fecha is null)
         {
-            mensaje = "Error, seleccione una fecha válida";
+            mensaje = "Error: seleccioná una fecha válida";
+            esError = true;
             await MostrarMensajeTemporal();
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(cantidad) || !double.TryParse(cantidad, out var monto))
+        if (string.IsNullOrWhiteSpace(cantidad) ||
+            !double.TryParse(cantidad.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var monto) ||
+            monto <= 0)
         {
-            mensaje = "Error, ingrese una cantidad válida";
+            mensaje = "Error: ingresá una cantidad numérica válida mayor a 0";
+            esError = true;
             await MostrarMensajeTemporal();
             return;
         }
 
         await GastosService.InsertarIngresoAsync(fecha.Value.Month, fecha.Value.Year, monto);
 
-        mensaje = "Presupuesto guardado correctamente";
+        mensaje = "¡Ingreso registrado correctamente!";
+        esError = false;
         cantidad = null;
 
         await MostrarMensajeTemporal();
@@ -76,7 +97,7 @@
     private async Task MostrarMensajeTemporal()
     {
         StateHasChanged();
-        await Task.Delay(1500);
+        await Task.Delay(2500);
         mensaje = null;
         StateHasChanged();
     }

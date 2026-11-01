@@ -1,196 +1,163 @@
-
-html, body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
+.sobrenosotros-container {
+    background-color: #ffffff;
 }
 
-html {
-    height: 100%;
-}
-
-body {
-    min-height: 100%;
-    margin: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-.ContenedorSobreNosotrosMain {
-    width: 100%;
-    min-height: 100dvh;
-    position: relative;
+.sobrenosotros-content {
+    padding: 16px;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 30px 20px;
-    box-sizing: border-box;
-    background-image: url("./images/fondo2.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    overflow-y: auto;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
 }
 
-.ContenedorCentro {
-    width: min(90%, 850px);
+/* IDENTIDAD */
+.card-identidad {
+    background: linear-gradient(135deg, #f8faff 0%, #edf2ff 100%);
+    border: 2px solid #3c40ea;
+    border-radius: var(--app-radius-lg);
+    padding: 24px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 34px;
     text-align: center;
-    box-sizing: border-box;
+    box-shadow: 0 6px 20px rgba(60, 64, 234, 0.12);
 }
 
-.Encabezado {
+.logos-fila {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 28px;
-    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 12px;
 }
 
-.LogoMNTS {
-    height: clamp(100px, 20vw, 140px);
+.logo-mnts {
+    height: 52px;
     width: auto;
+    object-fit: contain;
 }
 
-.LogoGNAND {
-    height: clamp(70px, 9vw, 110px);
+.texto-by {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #3c40ea;
+    font-style: italic;
+}
+
+.logo-gnand {
+    height: 42px;
     width: auto;
+    object-fit: contain;
+    /* Al ser blanco el PNG original, brightness(0) lo convierte en negro nítido visible */
+    filter: brightness(0);
+    opacity: 0.9;
 }
 
-.TextoBy {
-    color: white;
-    font-size: clamp(1.3rem, 2.2vw, 1.7rem);
-    font-weight: 500;
+.app-nombre {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: #3c40ea;
+    margin: 4px 0 8px 0;
 }
 
-.Descripcion {
-    color: white;
-    font-size: clamp(1.05rem, 1.8vw, 1.3rem);
-    line-height: 1.65;
-    max-width: 800px;
+.version-badge {
+    display: inline-block;
+    padding: 5px 14px;
+    background-color: #3c40ea;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(60, 64, 234, 0.25);
 }
 
-    .Descripcion p {
-        margin: 0 0 14px 0;
-    }
-
-        .Descripcion p:last-child {
-            margin-bottom: 0;
-        }
-
-.Separador {
-    width: min(100%, 550px);
-    height: 1px;
-    background: rgba(255, 255, 255, 0.4);
-}
-
-.Contacto {
+/* INFO */
+.card-info {
+    background-color: #ffffff;
+    border: 1.5px solid #d3dcff;
+    border-radius: var(--app-radius);
+    padding: 18px 16px;
+    box-shadow: 0 4px 14px rgba(60, 64, 234, 0.05);
     display: flex;
     flex-direction: column;
     gap: 14px;
 }
 
-.EnlaceContacto {
-    color: white;
-    text-decoration: none;
-    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
-    font-weight: 300;
-    transition: 0.2s;
+.info-item {
+    display: flex;
+    gap: 12px;
 }
 
-    .EnlaceContacto:hover {
-        opacity: 0.75;
-        text-decoration: underline;
-    }
+.info-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
 
-::deep .Version {
-    position: absolute;
-    bottom: 20px;
-    right: 24px;
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 0.9rem;
+.info-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-titulo {
+    font-size: 0.98rem;
+    font-weight: 800;
+    color: #3c40ea;
+}
+
+.info-desc {
+    font-size: 0.86rem;
+    line-height: 1.45;
+    color: #334155;
     margin: 0;
-    color: black;
-    opacity: 0.8;
 }
 
-::deep .BotonVolver {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    text-decoration: none;
-    color: white;
-    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+.info-separador {
+    height: 1.5px;
+    background-color: #e2e8f0;
+}
+
+/* CONTACTO */
+.card-contacto {
+    background: linear-gradient(180deg, #f8faff 0%, #f0f4ff 100%);
+    border: 1.5px solid #d3dcff;
+    border-radius: var(--app-radius);
+    padding: 20px 16px;
+    box-shadow: var(--app-shadow-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.contacto-titulo {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #171717;
+}
+
+.contacto-sub {
+    font-size: 0.82rem;
+    color: #555b73;
+    margin: 0 0 10px 0;
+}
+
+.btn-contacto {
+    width: 100%;
+    background-color: #3c40ea;
+    box-shadow: 0 4px 14px rgba(60, 64, 234, 0.32);
+}
+
+.btn-contacto:active {
+    background-color: #2f32c5;
+}
+
+.email-texto {
+    font-size: 0.82rem;
+    color: #3c40ea;
     font-weight: 700;
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(8px);
-    padding: 12px 18px;
-    border-radius: 14px;
-    transition: 0.2s;
+    margin-top: 4px;
 }
-
-    ::deep .BotonVolver:hover {
-        background: rgba(255,255,255,0.25);
-        transform: translateX(-2px);
-    }
-
-@media (max-width: 600px) {
-
-    .Encabezado {
-        flex-direction: column;
-        gap: 14px;
-    }
-
-    ::deep .BotonVolver {
-        top: 10px;
-        left: 10px;
-        padding: 10px 14px;
-    }
-
-    ::deep .Version {
-        position: static;
-        margin-top: 10px;
-    }
-}
-
-::deep .AvisoPrivacidad {
-    position: absolute;
-    bottom: 20px;
-    left: 24px;
-    right: 140px;
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 0.85rem;
-    margin: 0;
-    text-align: left;
-    color: black;
-    opacity: 0.8;
-}
-
-@media (max-width: 600px) {
-
-    .Encabezado {
-        flex-direction: column;
-        gap: 14px;
-    }
-
-    ::deep .BotonVolver {
-        top: 10px;
-        left: 10px;
-        padding: 10px 14px;
-    }
-
-    ::deep .AvisoPrivacidad {
-        position: static;
-        text-align: center;
-        margin-top: 16px;
-    }
-
-    ::deep .Version {
-        position: static;
-        margin-top: 6px;
-    }
-}
-
